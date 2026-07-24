@@ -1,0 +1,53 @@
+---
+layout: default
+---
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Daily blog · Oracle Supply Chain Management</p>
+    <h1 class="name"><span class="line"><span>Gowtham Kumar</span></span><span class="line"><span class="ghost">Shivakumar</span></span></h1>
+    <p class="role">{{ site.role }}</p>
+    <ul class="chips">
+      {% for c in site.credentials %}<li>{{ c }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div class="hero-side">
+    <figure class="portrait">
+      <img src="{{ site.portrait | relative_url }}" alt="Portrait of {{ site.title }}">
+    </figure>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <h2 class="log-title">About</h2>
+  <p>Gowtham Kumar Shivakumar is an Oracle SCM Consulting Manager. His core work sits in Procurement, Procure to Pay, and Inventory and Costing, with a growing practice in Manufacturing and Supply Planning, built across projects in manufacturing, healthcare, retail and distribution, and the public sector.</p>
+  <p>His work is the hands-on side of implementations. Requirements sessions, configuration builds, test cycles, and the steady stream of issues that sit between a design document and a working system. It is detailed work, and it teaches him something new almost every day.</p>
+  <p>This site is his working notebook, published every day. Each entry covers one practical thing. A configuration that behaved strangely. A setting worth knowing about. A lesson pulled from a live issue. Read it and skip a mistake he already made. Longer walkthroughs live on his YouTube channel, <a href="{{ site.links.youtube }}">SCM Simplified</a>.</p>
+  <p>If Oracle Cloud SCM is your world too, say hello on <a href="{{ site.links.linkedin }}">LinkedIn</a>. He reads every message.</p>
+</section>
+
+<section class="log" id="blog">
+  <h2 class="log-title">Blog</h2>
+  <ol class="entries" reversed>
+    {% assign total = site.posts | size %}
+    {% for post in site.posts %}
+    <li class="entry">
+      <a href="{{ post.url | relative_url }}">
+        <span class="entry-meta"><span class="entry-no">Entry {{ total | minus: forloop.index0 | prepend: '000' | slice: -3, 3 }}</span><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%d %b %Y" }}</time></span>
+        <span class="entry-title">{{ post.title }}</span>
+        <span class="entry-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+{% if site.newsletter_form and site.newsletter_form != "" %}
+<section class="subscribe" id="subscribe">
+  <h2 class="log-title">The blog, by email</h2>
+  <p>One entry a day, straight to your inbox. Unsubscribe anytime.</p>
+  <form class="sub-form" action="{{ site.newsletter_form }}" method="post" target="_blank">
+    <input type="email" name="email" required placeholder="you@company.com" aria-label="Email address">
+    <button type="submit" class="btn">Subscribe</button>
+  </form>
+</section>
+{% endif %}

@@ -1,0 +1,48 @@
+# ── Site settings ──────────────────────────────────────────────
+title: Gowtham Kumar Shivakumar
+tagline: Daily notes on Oracle SCM
+description: >-
+  Daily, practical notes on Oracle Supply Chain Management: configurations,
+  gotchas, and lessons from real projects.
+
+# After we publish, update this to your live address (no trailing slash):
+url: "https://gowthamkumarofficial2-crypto.github.io"
+
+timezone: America/New_York
+permalink: /blog/:year/:month/:day/:title/
+markdown: kramdown
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# ── YOUR LINKS ─────────────────────────────────────────────────
+# Paste a URL between quotes and the link appears on the site
+# automatically. Leave empty ("") and it stays hidden.
+links:
+  linkedin: "https://www.linkedin.com/in/gk23/"
+  youtube: "https://www.youtube.com/@SCM_Simplified_with_Gowtham"
+  oracle: ""
+  email: "gowthamkumarofficial2@gmail.com"
+
+# ── HERO ───────────────────────────────────────────────────────
+# Photo: upload your picture to assets/img/ then point to it here,
+# e.g. "/assets/img/me.jpg". Until then, a designed monogram shows.
+portrait: "/assets/img/portrait.webp"
+role: "Oracle Cloud SCM Consulting Manager. One practical entry, every day."
+credentials:
+  - "Procurement & P2P"
+  - "Inventory & Costing"
+  - "SCM Simplified on YouTube"
+
+# ── NEWSLETTER (free) ──────────────────────────────────────────
+# Paste your follow.it form URL here and the subscribe box appears
+# on the homepage automatically. Empty = hidden. See README step 5.
+newsletter_form: ""
+
+author:
+  name: Gowtham Kumar Shivakumar
+
+exclude:
+  - README.md
