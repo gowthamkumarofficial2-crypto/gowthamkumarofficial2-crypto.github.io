@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% seo %}
+  {% feed_meta %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <header class="site-head">
+    <a class="wordmark" href="{{ '/' | relative_url }}">GKS<span class="dot">.</span></a>
+    <nav class="site-nav" aria-label="Profiles">
+      {% if site.links.youtube and site.links.youtube != "" %}<a href="{{ site.links.youtube }}">YouTube</a>{% endif %}
+      <a href="{{ site.links.linkedin }}">LinkedIn</a>
+      {% if site.links.oracle and site.links.oracle != "" %}<a href="{{ site.links.oracle }}">Oracle</a>{% endif %}
+      {% if site.links.email and site.links.email != "" %}<a href="mailto:{{ site.links.email }}">Email</a>{% endif %}
+    </nav>
+  </header>
+  <div class="ticker">
+    <div class="ticker-track">
+      <div class="ticker-group"><a href="{{ '/#about' | relative_url }}">Oracle Cloud SCM</a><a class="hot" href="{{ '/#blog' | relative_url }}">Daily blog</a><a href="{{ '/#blog' | relative_url }}">Procurement</a><a href="{{ '/#blog' | relative_url }}">Procure to Pay</a><a href="{{ '/#blog' | relative_url }}">Inventory</a><a href="{{ '/#blog' | relative_url }}">Costing</a><a href="{{ site.links.youtube }}">SCM Simplified</a></div>
+      <div class="ticker-group" aria-hidden="true"><span>Oracle Cloud SCM</span><span class="hot">Daily blog</span><span>Procurement</span><span>Procure to Pay</span><span>Inventory</span><span>Costing</span><span>SCM Simplified</span></div>
+    </div>
+  </div>
+  <main>
+    {{ content }}
+  </main>
+  <footer class="site-foot">
+    <p class="foot-links">
+      {% if site.links.youtube and site.links.youtube != "" %}<a href="{{ site.links.youtube }}">YouTube</a>{% endif %}
+      <a href="{{ site.links.linkedin }}">LinkedIn</a>
+      {% if site.links.oracle and site.links.oracle != "" %}<a href="{{ site.links.oracle }}">Oracle Communities</a>{% endif %}
+      {% if site.links.email and site.links.email != "" %}<a href="mailto:{{ site.links.email }}">Email</a>{% endif %}
+      <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+    </p>
+    <p class="foot-fine">© {{ 'now' | date: "%Y" }} {{ site.title }} · One entry a day.</p>
+  </footer>
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

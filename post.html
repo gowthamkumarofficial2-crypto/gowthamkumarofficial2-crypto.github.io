@@ -1,0 +1,15 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-head">
+    <p class="entry-meta"><span class="entry-no">Blog entry</span><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d %B %Y" }}</time></p>
+    <h1 class="post-title">{{ page.title }}</h1>
+  </header>
+  <div class="post-body">
+    {{ content }}
+  </div>
+  <footer class="post-foot">
+    <a class="back" href="{{ '/' | relative_url }}">← Back to the blog</a>
+  </footer>
+</article>

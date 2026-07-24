@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-label="GKS monogram">
+  <rect width="480" height="600" fill="#141C25"/>
+  <rect x="16" y="16" width="448" height="568" fill="none" stroke="#243039" stroke-width="2"/>
+  <rect x="26" y="26" width="428" height="548" fill="none" stroke="#243039" stroke-width="1"/>
+  <text x="240" y="308" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-size="128" font-weight="800" fill="#8FB4D9" letter-spacing="3">GKS<tspan fill="#F4573F">.</tspan></text>
+  <text x="240" y="366" text-anchor="middle" font-family="'IBM Plex Mono', Consolas, monospace" font-size="17" letter-spacing="7" fill="#93A0AE">ORACLE SCM · DAILY</text>
+</svg>
