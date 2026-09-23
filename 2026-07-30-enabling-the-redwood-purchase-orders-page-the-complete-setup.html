@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet"><style>/* Gowtham Kumar Shivakumar — daily Oracle SCM log
+   Look: night-shift logistics paperwork. Deep slate, light ink, red stamp. */
+
+:root{
+  --bg:#0D1319;
+  --bg-raise:#141C25;
+  --ink:#E7EDF3;
+  --muted:#93A0AE;
+  --line:#243039;
+  --stamp:#F4573F;
+  --steel:#8FB4D9;
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:1rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--stamp);outline-offset:3px}
+
+/* ── Header ── */
+.site-head{
+  max-width:60rem;margin:0 auto;padding:1.1rem 1.25rem;
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--line);
+}
+.wordmark{font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none}
+.wordmark .dot{color:var(--stamp)}
+.site-nav{display:flex;gap:1.1rem}
+.site-nav a{font-family:var(--mono);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--muted)}
+.site-nav a:hover{color:var(--stamp)}
+
+main{max-width:60rem;margin:0 auto;padding:0 1.25rem}
+
+/* ── Hero ── */
+.hero{
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.9fr);
+  gap:2.75rem;align-items:center;
+  padding:3.25rem 0;border-bottom:1px solid var(--line);
+}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin:0 0 1.1rem}
+.name{
+  font-family:var(--display);
+  font-weight:850;
+  font-size:clamp(2.3rem,6vw,4rem);
+  line-height:1.0;
+  letter-spacing:-.015em;
+  text-transform:uppercase;
+  margin:0;
+}
+.role{color:var(--steel);font-weight:600;font-size:1.05rem;margin:1rem 0 1.35rem;max-width:30rem}
+.chips{display:flex;flex-wrap:wrap;gap:.55rem;list-style:none;margin:0;padding:0}
+.chips li{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.4rem .75rem;
+  background:var(--bg-raise);
+}
+.portrait{position:relative;margin:0}
+.portrait{isolation:isolate}
+.portrait::before{content:"";position:absolute;inset:-6% -14%;z-index:-1;filter:blur(8px);background:radial-gradient(52% 46% at 50% 30%,rgba(143,180,217,.18),transparent 70%),radial-gradient(40% 36% at 62% 70%,rgba(244,87,63,.08),transparent 72%)}
+.portrait img{display:block;width:100%;height:auto}
+.stamp{
+  font-family:var(--mono);font-size:.76rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;text-align:center;
+  color:var(--stamp);border:2px solid var(--stamp);
+  border-radius:999px;padding:1rem .65rem;line-height:1.35;
+  background:var(--bg);
+}
+.portrait .stamp{position:absolute;right:-.8rem;bottom:-.9rem;transform:rotate(-8deg)}
+@media (max-width:720px){
+  .hero{grid-template-columns:1fr;gap:2rem}
+  .hero-side{max-width:16.5rem}
+}
+
+/* ── Section titles ── */
+.log-title{font-family:var(--mono);font-weight:500;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--steel);margin:0 0 .75rem}
+
+/* ── About ── */
+.about{padding:2.5rem 0;max-width:44rem;border-bottom:1px solid var(--line)}
+.about p{margin:.6rem 0}
+.about a{color:var(--steel);text-decoration-color:var(--stamp)}
+
+/* ── The log ── */
+.log{padding:2.5rem 0 1.5rem}
+.entries{list-style:none;margin:0;padding:0}
+.entry{border-top:1px solid var(--line)}
+.entry:last-child{border-bottom:1px solid var(--line)}
+.entry a{display:block;text-decoration:none;padding:1.15rem .35rem;transition:background .15s}
+.entry a:hover{background:var(--bg-raise)}
+.entry-meta{display:flex;gap:1.1rem;font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.entry-no{color:var(--stamp);font-weight:500}
+.entry-title{display:block;font-family:var(--display);font-weight:700;font-size:1.45rem;line-height:1.2;margin:.35rem 0 .3rem}
+.entry a:hover .entry-title{color:var(--steel)}
+.entry-excerpt{display:block;color:var(--muted);max-width:44rem;font-size:.95rem}
+
+/* ── Subscribe ── */
+.subscribe{padding:2.5rem 0 3rem;max-width:44rem}
+.subscribe p{margin:.4rem 0 1.1rem;color:var(--muted)}
+.sub-form{display:flex;gap:.6rem;flex-wrap:wrap;max-width:28rem}
+.sub-form input[type=email]{
+  flex:1;min-width:12rem;background:var(--bg-raise);border:1px solid var(--line);
+  color:var(--ink);padding:.7rem .85rem;border-radius:4px;font-family:var(--body);font-size:.95rem;
+}
+.sub-form input[type=email]::placeholder{color:var(--muted)}
+.btn{
+  background:var(--stamp);color:#14100E;border:0;border-radius:4px;cursor:pointer;
+  font-family:var(--mono);font-weight:500;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.7rem 1.1rem;
+}
+.btn:hover{filter:brightness(1.08)}
+
+/* ── Post page ── */
+.post{padding:3rem 0}
+.post-head .entry-meta{margin:0 0 .9rem}
+.post-title{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,5vw,3rem);line-height:1.08;letter-spacing:-.01em;margin:0 0 1.5rem;max-width:46rem}
+.post-body{max-width:42rem;font-size:1.05rem}
+.post-body h2,.post-body h3{font-family:var(--display);letter-spacing:-.01em;line-height:1.2;margin:2rem 0 .5rem}
+.post-body pre{background:#0A0F14;border:1px solid var(--line);color:#DCE5EC;padding:1rem 1.2rem;overflow-x:auto;border-radius:4px;font-family:var(--mono);font-size:.88rem;line-height:1.6}
+.post-body code{font-family:var(--mono);font-size:.9em}
+.post-body :not(pre)>code{background:var(--bg-raise);padding:.1em .35em;border-radius:3px}
+.post-body img{max-width:100%;height:auto;border-radius:4px}
+.post-body a{color:var(--steel);text-decoration-color:var(--stamp)}
+.post-body blockquote{margin:1.25rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--stamp);color:var(--muted)}
+.post-foot{margin-top:2.5rem;border-top:1px solid var(--line);padding-top:1.25rem}
+.back{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--steel)}
+.back:hover{color:var(--stamp)}
+
+/* ── Footer ── */
+.site-foot{max-width:60rem;margin:0 auto;padding:1.5rem 1.25rem 2.5rem;border-top:1px solid var(--line)}
+.foot-links{margin:0 0 .35rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+.foot-links a{text-decoration:none;color:var(--steel)}
+.foot-links a:hover{color:var(--stamp)}
+.foot-fine{margin:0;font-size:.8rem;color:var(--muted)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .entry a{transition:none}
+}
+
+/* ── Cinema pass: motion, atmosphere, texture ── */
+
+/* Sticky glass header */
+.site-head{position:sticky;top:0;z-index:50;background:rgba(13,19,25,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+/* Terminal ticker */
+.ticker{overflow:hidden;border-bottom:1px solid var(--line);background:var(--bg-raise)}
+.ticker-track{display:flex;width:max-content;animation:tick 30s linear infinite;padding:.45rem 0;will-change:transform}
+.ticker-group{display:flex}
+.ticker-group a,.ticker-group span{font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:0 0 0 1.4rem;white-space:nowrap;text-decoration:none}
+.ticker-group a::after,.ticker-group span::after{content:"·";padding-left:1.4rem;color:var(--line)}
+.ticker-group a:hover{color:var(--ink)}
+.ticker-group .hot{color:var(--stamp);font-weight:500}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* Film grain */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");background-size:180px 180px}
+
+/* Hero atmosphere */
+.hero{position:relative}
+.hero::before{content:"";position:absolute;inset:-18% -10% auto -10%;height:130%;pointer-events:none;filter:blur(2px);background:radial-gradient(38rem 22rem at 18% 22%,rgba(143,180,217,.14),transparent 60%),radial-gradient(26rem 18rem at 85% 78%,rgba(244,87,63,.10),transparent 62%);animation:drift 16s ease-in-out infinite alternate}
+.hero>*{position:relative;z-index:1}
+@keyframes drift{to{transform:translate3d(2%,-2.5%,0)}}
+
+/* Title card entrance */
+.name .line{display:block;overflow:hidden}
+.name .line>span{display:block;transform:translateY(112%);animation:rise .85s cubic-bezier(.2,.75,.2,1) forwards}
+.name .line:nth-child(2)>span{animation-delay:.14s}
+.ghost{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+@supports not (-webkit-text-stroke:1px var(--ink)){.ghost{color:var(--ink)}}
+@keyframes rise{to{transform:translateY(0)}}
+.hero-copy .eyebrow,.hero-copy .role,.hero-copy .chips{opacity:0;animation:fadeUp .7s ease forwards}
+.hero-copy .eyebrow{animation-delay:.05s}
+.hero-copy .role{animation-delay:.38s}
+.hero-copy .chips{animation-delay:.55s}
+.portrait img,.portrait svg{opacity:0;animation:fadeUp .8s ease .3s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Stamp slam */
+.portrait .stamp{opacity:0;animation:stampin .55s cubic-bezier(.2,1.4,.4,1) .95s forwards}
+@keyframes stampin{0%{opacity:0;transform:rotate(-8deg) scale(2.4)}70%{opacity:1;transform:rotate(-8deg) scale(.94)}100%{opacity:1;transform:rotate(-8deg) scale(1)}}
+
+/* Scroll reveals (JS adds .reveal / .in) */
+html.js .reveal{opacity:0;transform:translateY(22px)}
+html.js .reveal.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+
+/* Micro-interactions */
+.entry a{position:relative;transition:background .15s,padding-left .25s ease}
+.entry a::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--stamp);transform:scaleY(0);transform-origin:top;transition:transform .25s ease}
+.entry a:hover::before{transform:scaleY(1)}
+.entry a:hover{padding-left:1rem}
+.chips li{transition:transform .2s ease,border-color .2s ease}
+.chips li:hover{transform:translateY(-2px);border-color:var(--steel)}
+.portrait img{transition:transform .5s ease}
+.portrait:hover img{transform:scale(1.02)}
+.btn{transition:transform .15s ease,filter .15s ease}
+.btn:hover{transform:translateY(-1px)}
+
+/* Calm everything down for reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .ticker-track{animation:none}
+  .hero::before{animation:none}
+  .name .line>span,.hero-copy .eyebrow,.hero-copy .role,.hero-copy .chips,.portrait img,.portrait svg,.portrait .stamp{animation:none;opacity:1;transform:none}
+  .portrait .stamp{transform:rotate(-8deg)}
+  html.js .reveal{opacity:1;transform:none}
+  .entry a,.chips li,.portrait img,.btn{transition:none}
+}
+
+/* ── Mobile refinements (≤560px) ── */
+@media (max-width:560px){
+  .site-head{padding:.9rem 1.1rem}
+  .wordmark{font-size:1rem}
+  .site-nav{gap:.85rem}
+  .site-nav a{font-size:.72rem}
+  main{padding:0 1.1rem}
+
+  /* Hero: single column, portrait as a banner on top, then copy */
+  .hero{grid-template-columns:1fr;padding:2rem 0 2.25rem;gap:1.4rem}
+  .hero-side{order:-1;width:100%;max-width:100%;margin:0}
+  .portrait{width:100%}
+  .portrait img{width:100%;height:220px;object-fit:cover;object-position:50% 22%;border-radius:10px}
+  .hero-copy{text-align:left}
+  /* Name: size so the longest word (Gowtham) always fits; allow first line to wrap to two rows */
+  .name{font-size:clamp(2rem,11vw,3.2rem);line-height:1.04;white-space:normal}
+  .name .line{display:block;overflow:visible}
+  .name .line>span{display:block;white-space:normal;word-spacing:100vw}
+  .role{font-size:1rem;margin:.9rem 0 1.1rem}
+  .chips{gap:.45rem}
+  .chips li{font-size:.66rem;padding:.35rem .6rem}
+
+  /* Sections: tighter vertical rhythm */
+  .about{padding:2rem 0}
+  .about p{font-size:1rem}
+  .log{padding:2rem 0 1rem}
+  .subscribe{padding:2rem 0 2.5rem}
+
+  /* Blog entries: easier tap targets, no hover-only affordances */
+  .entry a{padding:1.1rem .2rem}
+  .entry a:hover{padding-left:.2rem}
+  .entry a::before{display:none}
+  .entry-title{font-size:1.28rem}
+  .entry-meta{gap:.7rem;font-size:.7rem}
+  .entry-excerpt{font-size:.92rem}
+
+  /* Subscribe: full-width stacked field + button */
+  .sub-form{flex-direction:column;gap:.5rem;max-width:100%}
+  .sub-form input[type=email]{min-width:0;width:100%}
+  .btn{width:100%;padding:.8rem}
+
+  /* Post pages */
+  .post{padding:2.25rem 0}
+  .post-title{font-size:clamp(1.6rem,7vw,2.2rem)}
+  .post-body{font-size:1.02rem}
+  .post-body pre{font-size:.8rem;padding:.85rem .95rem}
+
+  /* Footer wraps neatly */
+  .site-foot{padding:1.35rem 1.1rem 2.25rem}
+  .foot-links{gap:.35rem .9rem;font-size:.72rem}
+
+  /* Ticker: a touch smaller, still readable */
+  .ticker-group a,.ticker-group span{font-size:.64rem;letter-spacing:.16em;padding-left:1.1rem}
+  .ticker-group a::after,.ticker-group span::after{padding-left:1.1rem}
+}
+
+/* Very small phones (≤380px) */
+@media (max-width:380px){
+  .name{font-size:clamp(2.1rem,13.5vw,2.6rem);line-height:1.03}
+  .site-nav{gap:.55rem}
+  .site-nav a{font-size:.64rem}
+  .portrait img{height:190px}
+}
+
+/* Never let a wide code block break the layout on mobile */
+.post-body pre{max-width:100%}
+img,svg{max-width:100%}
+</style></head><body><header class="site-head"><a class="wordmark" href="index.html">GKS<span class="dot">.</span></a><nav class="site-nav"><a href="https://www.youtube.com/@SCM_Simplified_with_Gowtham">YouTube</a><a href="https://www.linkedin.com/in/gk23/">LinkedIn</a><a href="mailto:gowthamkumarofficial2@gmail.com">Email</a></nav></header><div class="ticker"><div class="ticker-track"><div class="ticker-group"><a href="index.html#about">Oracle Cloud SCM</a><a class="hot" href="index.html#blog">Daily blog</a><a href="index.html#blog">Procurement</a><a href="index.html#blog">Procure to Pay</a><a href="index.html#blog">Inventory</a><a href="index.html#blog">Costing</a><a href="https://www.youtube.com/@SCM_Simplified_with_Gowtham">SCM Simplified</a></div><div class="ticker-group" aria-hidden="true"><span>Oracle Cloud SCM</span><span class="hot">Daily blog</span><span>Procurement</span><span>Procure to Pay</span><span>Inventory</span><span>Costing</span><span>SCM Simplified</span></div></div></div><main><article class="post"><p class="entry-meta"><span class="entry-no">Blog entry</span><time>30 July 2026</time></p><h1 class="post-title">Enabling the Redwood Purchase Orders Page: The Complete Setup</h1><div class="post-body"><p>A consultant flips on the Redwood profile option for purchase orders, tells the client it is ready, and moves on. The next morning a buyer opens the shiny new page, types an item into a line, and gets nothing. Empty results. The page looks right, the profile option is set, and item search returns a blank stare. The setup was not wrong so much as unfinished. Turning on the Redwood PO page is really three jobs, not one, and the two that get skipped are the ones that make it actually work.</p>
+<p>Here is the whole sequence, in the order that keeps that empty search from ever happening.</p>
+<h2>The mental model first</h2>
+<p>Two ideas need separating before touching a single setting.</p>
+<p>A profile option decides which version of a page opens. Flip it, and the Redwood Purchase Orders page replaces the classic one. That part is genuinely a switch.</p>
+<p>But the Redwood pages do not read data the way the old pages did. They run on a search index, Oracle Search Cloud Service, sitting underneath. A page can be enabled and still show nothing, because the index behind it is empty until someone fills it. That filling step is a scheduled process, and it is the piece people forget. Profile option turns the page on. The ingest process gives the page something to show.</p>
+<p>Keep those two apart and the rest of the setup makes sense.</p>
+<h2>Step one: turn on the Redwood pages</h2>
+<p>Start in Setup and Maintenance, in the Manage Administrator Profile Values task. This is where every one of these switches lives. Search each profile option by name, set the value to Y at site level, save.</p>
+<p>For the purchasing work area and the orders page, two options matter. ORA_PO_PURCHASING_OVERVIEW_REDWOOD_ENABLED brings up the Redwood Purchasing overview. ORA_PO_PURCHASE_ORDERS_REDWOOD_ENABLED brings up the Redwood Purchase Orders page itself, the one where orders and change orders get created. Both are off by default.</p>
+<p>A change to a profile value takes effect the next time a user signs in, so anyone already logged in needs to sign out and back before the new page appears. Small detail, saves a confused phone call.</p>
+<h2>Step two: make the roles and index definitions exist</h2>
+<p>Two background jobs lay the groundwork, and skipping them produces the strangest symptoms, missing privileges and empty pages that look like bugs.</p>
+<p>Run the Import User and Role Application Security Data job first. This makes the Redwood purchasing privilege, the one that governs managing POs on the new page, actually show up in the Security Console so it can be granted. Without it, the access side of the setup has nothing to hand out.</p>
+<p>Then the important one, the job that fills the search index. Its name is worth memorizing, because it powers nearly every Redwood procurement page: ESS job to create index definition and perform initial ingest to OSCS. Find it under Tools, then Scheduled Processes, then Schedule New Process. Running it builds the index definition and performs the first load of existing data into the search service.</p>
+<p>This process takes an index name as a parameter, which is how it knows what to load. For the purchase order pages, two indexes carry the freight. The orders index is fa-prc-po. The schedules index is fa-prc-po-schedules. Submit the process for these so the new pages have both the order headers and their schedules to display. One quiet convenience worth knowing: leave the index name blank and the process runs for every predefined index at once, which is often the simplest way to cover everything in a fresh environment.</p>
+<p>One more thing about this job. New orders created after the initial ingest flow into the index automatically. The manual run is a one time catch up for the data already sitting in the system before Redwood came on. That is why it is called the initial ingest.</p>
+<p>Running these needs the Manage Scheduled Job Definition privilege, so confirm that is in hand before starting, or the process will not submit.</p>
+<h2>Step three: wire up item search on the PO line</h2>
+<p>Now the specific problem from the opening. A buyer on the new PO page needs to search and select items on a line, and that item search has its own setup, entirely separate from turning the page on. This is the step that gets missed most, because the page works fine right up until someone reaches for an item.</p>
+<p>Two moves make it happen. First, opt in to the Search Items Using the New User Interface feature, found under the Product Management offering in the opt in screens. Item search on the Redwood PO line borrows the product management search experience, which is why the setting lives over in Product Management rather than Procurement. That cross offering link is exactly what makes it easy to overlook.</p>
+<p>Second, enable the profile option that schedules the item search ingest, ORA_FND_SEARCH_INITIAL_INGEST_JOB_SCHEDULE_ENABLED. This is the item side mirror of the PO ingest from step two. Same principle, different data. The purchase order index holds orders, and this one gets items loaded into search so they can be found from a PO line. Skip it, and item search stays empty no matter how correctly the page itself was enabled.</p>
+<p>With the opt in done and that profile option on, the item ingest runs and the search box on the PO line finally returns results. The empty search from the opening is closed.</p>
+<h2>The order matters</h2>
+<p>Everything above works because it runs in sequence. Turn on the pages. Build the roles and the index definitions. Load the data, orders and items both. Do it in that order and the new page is live and populated on day one.</p>
+<p>Do it out of order, or stop after the profile option like the consultant in the opening, and the symptoms look like defects. Missing privileges. Blank order lists. Item search that returns nothing. None of those are bugs. Each one is a step that was skipped, and each maps to a specific job that was never run.</p>
+<p>The Redwood purchase order experience is a real upgrade for buyers. It just asks for the full setup, not the first line of it. Give it all three steps and it delivers exactly what the demo promised.</p>
+<p>More practical Oracle Fusion walkthroughs land here every day. Video versions live on the SCM Simplified YouTube channel.</p></div><p style="margin-top:2.5rem;border-top:1px solid var(--line);padding-top:1.25rem"><a class="back" href="index.html">← Back to the blog</a></p></article></main><footer class="site-foot"><p class="foot-links"><a href="https://www.youtube.com/@SCM_Simplified_with_Gowtham">YouTube</a> <a href="https://www.linkedin.com/in/gk23/">LinkedIn</a> <a href="mailto:gowthamkumarofficial2@gmail.com">Email</a></p><p class="foot-fine">© 2026 Gowtham Kumar Shivakumar · One entry a day.</p></footer><script>document.documentElement.classList.add('js');
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.about,.log,.subscribe,.entry,.post').forEach(function (el) {
+    el.classList.add('reveal'); io.observe(el);
+  });
+}
+</script></body></html>
