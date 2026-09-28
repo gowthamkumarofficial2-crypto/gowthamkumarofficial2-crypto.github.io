@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>The ROI Reality Check — Oracle AI ROI Calculator</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="You matched with an Oracle AI agent. Now find out if the relationship pays for itself. A field experiment by Gowtham Kumar Shivakumar."><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png"><link rel="apple-touch-icon" href="apple-touch-icon-180.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet"><style>/* The ROI Reality Check — Coral Crush build */
+:root{
+  --bg:#141821; --card:#FAF7F2; --card-ink:#141821; --ink:#F5F1EA; --muted:#9AA3B2;
+  --coral1:#FD297B; --coral2:#FF655B; --yes:#2BD98F; --no:#FF4458; --pop:#FFC629;
+  --display:"Archivo",system-ui,sans-serif; --body:"Public Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --grad:linear-gradient(135deg,var(--coral1),var(--coral2));
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.2;pointer-events:none;z-index:0}
+.blob.b1{width:420px;height:420px;background:#2BD98F;top:-160px;right:-120px}
+.blob.b2{width:380px;height:380px;background:#FD297B;bottom:-140px;left:-140px}
+.site-head{display:flex;justify-content:space-between;align-items:center;padding:1rem 5vw;position:relative;z-index:2}
+.wordmark{font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--ink);text-decoration:none}
+.wordmark .dot{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.head-link{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.head-link:hover{color:var(--ink)}
+main{flex:1;padding:0 5vw 3rem;position:relative;z-index:1}
+.stage{width:100%;max-width:960px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--pop);margin:1.6rem 0 .7rem;text-align:center}
+h1.app-title{font-family:var(--display);font-weight:900;font-size:clamp(2rem,7vw,3rem);line-height:1.05;margin:.2rem 0 .8rem;text-align:center;letter-spacing:-.02em}
+h1.app-title .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--muted);text-align:center;max-width:36rem;margin:0 auto 1.6rem;font-size:1.02rem}
+.match-chip{display:flex;align-items:center;gap:.7rem;background:#1B2230;border:1px solid #2A3140;border-radius:16px;padding:.8rem 1.1rem;max-width:34rem;margin:0 auto 1.8rem}
+.match-chip .mc-badge{font-size:1.6rem}
+.match-chip .mc-k{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block}
+.match-chip .mc-n{font-family:var(--display);font-weight:800;font-size:1rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:#1B2230;border:1px solid #2A3140;border-radius:20px;padding:1.4rem 1.3rem;margin-bottom:1.4rem}
+.panel h2{font-family:var(--display);font-weight:800;font-size:1.15rem;margin:0 0 1rem;display:flex;align-items:center;gap:.5rem}
+.field{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-bottom:.75rem}
+.field label{font-size:.88rem;color:#C4CBD6;flex:1}
+.field input[type=number]{width:130px;background:#141821;border:1px solid #2A3140;border-radius:10px;color:var(--ink);font-family:var(--mono);font-size:.9rem;padding:.5rem .6rem;text-align:right}
+.field input[type=number]:focus{outline:2px solid var(--coral1);border-color:transparent}
+.hint{font-size:.72rem;color:var(--muted);margin:-.4rem 0 .8rem}
+details.fine{margin-top:.6rem}
+details.fine summary{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+details.fine[open] summary{margin-bottom:.7rem}
+/* toggles */
+.togs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.4rem}
+.tog{font-family:var(--display);font-weight:700;font-size:.82rem;padding:.5rem .9rem;border-radius:999px;border:2px solid #2A3140;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.tog:active{transform:scale(.94)}
+.tog.on{border-color:var(--yes);color:var(--ink);background:rgba(43,217,143,.12)}
+.tog .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2A3140;margin-right:.4rem;transition:background .15s}
+.tog.on .dot{background:var(--yes)}
+.ben{border-top:1px dashed #2A3140;padding-top:.9rem;margin-top:.9rem;display:none}
+.ben.on{display:block}
+.ben h3{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pop);font-weight:500;margin:0 0 .7rem}
+.ben .mo{font-family:var(--mono);font-size:.75rem;color:var(--yes);text-align:right;margin-top:.2rem}
+/* results */
+.results{position:sticky;top:1rem}
+.res-card{background:var(--card);color:var(--card-ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:0 20px 50px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.res-card::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:var(--grad)}
+.res-verdict{font-family:var(--display);font-weight:900;font-size:clamp(1.3rem,4.5vw,1.7rem);line-height:1.15;margin:.2rem 0 1rem;letter-spacing:-.01em}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.kpi{background:#F1ECE2;border-radius:14px;padding:.8rem .9rem}
+.kpi .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#7A8494;display:block;margin-bottom:.15rem}
+.kpi .v{font-family:var(--display);font-weight:900;font-size:1.25rem;letter-spacing:-.01em}
+.kpi .v.good{color:#0FA968}
+.kpi .v.bad{color:#E02D44}
+.chart-wrap{margin-top:1.1rem}
+.chart-wrap .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#7A8494;display:block;margin-bottom:.4rem}
+svg#chart{width:100%;height:150px;display:block}
+.res-note{font-size:.72rem;color:#7A8494;margin-top:1rem}
+.foot-note{text-align:center;color:var(--muted);font-size:.78rem;margin-top:1.6rem}
+.reveal-ctas{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1.4rem}
+.btn{display:inline-block;font-family:var(--display);font-weight:800;font-size:.95rem;padding:.85rem 1.8rem;border:none;border-radius:999px;color:#fff;background:var(--grad);text-decoration:none;cursor:pointer;box-shadow:0 8px 30px rgba(253,41,123,.35);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.95)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid #2A3140;box-shadow:none}
+.btn.ghost:hover{color:var(--ink);border-color:var(--muted)}
+.post-foot{padding:1.2rem 5vw;position:relative;z-index:2}
+.post-foot .back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.post-foot .back:hover{color:var(--ink)}
+</style></head><body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<header class="site-head"><a class="wordmark" href="index.html">GKS<span class="dot">.</span></a><a class="head-link" href="ai-matchmaker.html">← The Matchmaker</a></header>
+<main>
+<div class="stage">
+  <p class="eyebrow">The money talk · Oracle AI</p>
+  <h1 class="app-title">The ROI <span class="grad">Reality Check</span> 💰</h1>
+  <p class="lede" id="lede">Before you commit, ask about money. Tune the assumptions to your world — every number here is an editable estimate, not a quote.</p>
+  <div class="match-chip" id="match-chip" style="display:none">
+    <span class="mc-badge" id="mc-badge"></span>
+    <span><span class="mc-k">Your match</span><span class="mc-n" id="mc-name"></span></span>
+  </div>
+
+  <div class="grid">
+    <div>
+      <!-- COSTS -->
+      <section class="panel">
+        <h2>💸 What this relationship costs</h2>
+        <div class="field"><label for="impl">One-time implementation ($) <span class="hint-inline"></span></label><input type="number" id="impl" value="45000" min="0" step="1000"></div>
+        <p class="hint" id="impl-hint">Estimated config, testing &amp; change-management effort. Edit freely.</p>
+        <div class="field"><label for="subm">Monthly subscription ($)</label><input type="number" id="subm" value="0" min="0" step="100"></div>
+        <p class="hint">Oracle markets prebuilt Fusion agents as included with your SaaS subscription — but from release 26C an AI Units consumption model applies, and agentic apps may be separately subscribed. Check your contract.</p>
+        <div class="field"><label for="varm">Variable run cost per month ($)</label><input type="number" id="varm" value="0" min="0" step="50"></div>
+        <details class="fine"><summary>The fine print</summary>
+          <div class="field"><label for="months">Analysis period (months)</label><input type="number" id="months" value="36" min="1" max="120"></div>
+          <div class="field"><label for="disc">Discount rate (annual %)</label><input type="number" id="disc" value="10" min="0" max="50" step="0.5"></div>
+          <div class="field"><label for="real">Realization factor (%)</label><input type="number" id="real" value="80" min="0" max="100" step="5"></div>
+          <p class="hint">Realization factor haircuts every benefit — because nobody captures 100% of a business case.</p>
+        </details>
+      </section>
+
+      <!-- BENEFITS -->
+      <section class="panel">
+        <h2>💝 What it gives back</h2>
+        <div class="togs" id="togs"></div>
+        <p class="hint">Toggle what applies. Your match pre-selected the ones it actually delivers.</p>
+
+        <div class="ben" id="ben-labor"><h3>⏱ Labor / time savings</h3>
+          <div class="field"><label for="l_emp"># of people impacted</label><input type="number" id="l_emp" value="10" min="0"></div>
+          <div class="field"><label for="l_hrs">Hours saved per person per month</label><input type="number" id="l_hrs" value="6" min="0"></div>
+          <div class="field"><label for="l_rate">Fully loaded hourly cost ($/hr)</label><input type="number" id="l_rate" value="60" min="0"></div>
+          <div class="field"><label for="l_red">% of saved time redeployed</label><input type="number" id="l_red" value="100" min="0" max="100"></div>
+          <p class="mo" id="mo-labor"></p></div>
+
+        <div class="ben" id="ben-cash"><h3>🌊 Cash flow / DSO improvement</h3>
+          <div class="field"><label for="c_rev">Monthly revenue affected ($)</label><input type="number" id="c_rev" value="500000" min="0" step="10000"></div>
+          <div class="field"><label for="c_dso0">Baseline DSO (days)</label><input type="number" id="c_dso0" value="45" min="0"></div>
+          <div class="field"><label for="c_dso1">Expected DSO with AI (days)</label><input type="number" id="c_dso1" value="40" min="0"></div>
+          <div class="field"><label for="c_cap">Cost of capital (annual %)</label><input type="number" id="c_cap" value="8" min="0" step="0.5"></div>
+          <p class="mo" id="mo-cash"></p></div>
+
+        <div class="ben" id="ben-error"><h3>🩹 Error &amp; rework reduction</h3>
+          <div class="field"><label for="e_vol">Monthly transaction volume</label><input type="number" id="e_vol" value="2000" min="0"></div>
+          <div class="field"><label for="e_r0">Baseline error rate (%)</label><input type="number" id="e_r0" value="5" min="0" max="100" step="0.5"></div>
+          <div class="field"><label for="e_r1">Error rate with AI (%)</label><input type="number" id="e_r1" value="2" min="0" max="100" step="0.5"></div>
+          <div class="field"><label for="e_cost">Cost per error ($)</label><input type="number" id="e_cost" value="25" min="0"></div>
+          <p class="mo" id="mo-error"></p></div>
+
+        <div class="ben" id="ben-thru"><h3>🚀 Throughput / capacity</h3>
+          <div class="field"><label for="t_vol">Baseline monthly volume handled</label><input type="number" id="t_vol" value="10000" min="0"></div>
+          <div class="field"><label for="t_pct">Volume increase with same staff (%)</label><input type="number" id="t_pct" value="10" min="0" step="1"></div>
+          <div class="field"><label for="t_profit">Profit per unit / transaction ($)</label><input type="number" id="t_profit" value="8" min="0" step="0.5"></div>
+          <p class="mo" id="mo-thru"></p></div>
+
+        <div class="ben" id="ben-rev"><h3>📈 Revenue uplift</h3>
+          <div class="field"><label for="r_base">Baseline monthly revenue ($)</label><input type="number" id="r_base" value="1000000" min="0" step="50000"></div>
+          <div class="field"><label for="r_pct">Uplift attributable to AI (%)</label><input type="number" id="r_pct" value="1" min="0" step="0.25"></div>
+          <div class="field"><label for="r_margin">Gross margin (%)</label><input type="number" id="r_margin" value="30" min="0" max="100"></div>
+          <p class="mo" id="mo-rev"></p></div>
+
+        <div class="ben" id="ben-risk"><h3>🛡️ Risk / penalty avoidance</h3>
+          <div class="field"><label for="k_base">Baseline annual losses / penalties ($)</label><input type="number" id="k_base" value="250000" min="0" step="10000"></div>
+          <div class="field"><label for="k_pct">Reduction with AI (%)</label><input type="number" id="k_pct" value="30" min="0" max="100"></div>
+          <p class="mo" id="mo-risk"></p></div>
+
+        <div class="ben" id="ben-other"><h3>🎁 Other hard savings</h3>
+          <div class="field"><label for="o_amt">Other monthly savings ($)</label><input type="number" id="o_amt" value="2000" min="0" step="100"></div>
+          <p class="mo" id="mo-other"></p></div>
+      </section>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results">
+      <div class="res-card">
+        <p class="res-verdict" id="verdict">Let's talk numbers.</p>
+        <div class="kpis">
+          <div class="kpi"><span class="k">Net monthly benefit</span><span class="v" id="k-netmo">—</span></div>
+          <div class="kpi"><span class="k">ROI over period</span><span class="v" id="k-roi">—</span></div>
+          <div class="kpi"><span class="k">Payback</span><span class="v" id="k-payback">—</span></div>
+          <div class="kpi"><span class="k">NPV</span><span class="v" id="k-npv">—</span></div>
+        </div>
+        <div class="chart-wrap"><span class="k">Cumulative cash flow</span>
+          <svg id="chart" viewBox="0 0 320 150" preserveAspectRatio="none" aria-label="Cumulative cash flow over the analysis period"></svg>
+        </div>
+        <p class="res-note">Estimates only, using your assumptions and an 80%-style realization haircut. Oracle publishes no per-agent pricing; verify licensing (AI Units, agentic app subscriptions) against your contract. This is a fun tool, not a business case.</p>
+      </div>
+      <div class="reveal-ctas">
+        <a class="btn ghost" href="ai-matchmaker.html">Find another match</a>
+        <a class="btn ghost" href="index.html">Read the blog</a>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="post-foot"><a class="back" href="index.html">← Back to the blog</a></footer>
+<script>
+/* Agent metadata: name, badge, benefit categories it plausibly delivers, and an implementation-effort tier.
+   Tiers are consulting-effort ESTIMATES (t1 advisor/chat config ≈ $15k, t2 workflow agent ≈ $45k, t3 agentic workspace ≈ $90k). All editable in the UI. */
+const TIER_IMPL = {1: 15000, 2: 45000, 3: 90000};
+const AGENT_META = {
+  proc: {
+    a1:{n:"Payables Agent",b:"🧾",cats:["labor","error","thru","risk","cash"],t:2},
+    a2:{n:"Procurement Policy Advisor",b:"📖",cats:["labor","error","risk"],t:1},
+    a3:{n:"Quote-to-Requisition Assistant",b:"📨",cats:["labor","error"],t:1},
+    a4:{n:"Autonomous Sourcing Assistant",b:"⚖️",cats:["labor","other","thru"],t:2},
+    a5:{n:"Supplier Portal Advisor",b:"🤝",cats:["labor","error"],t:1},
+    a6:{n:"Requisition Status Advisor",b:"🔎",cats:["labor","thru"],t:1}
+  },
+  inv: {
+    a1:{n:"Inventory Aging Advisor",b:"🕰️",cats:["other","cash","risk"],t:1},
+    a2:{n:"Cycle Count Analysis Advisor",b:"🔢",cats:["error","other","risk"],t:1},
+    a3:{n:"ASN Creation Assistant",b:"📬",cats:["labor","error"],t:1},
+    a4:{n:"Landed Cost Estimation Advisor",b:"🚢",cats:["other","labor"],t:1},
+    a5:{n:"Supplier Accruals Assistant",b:"🧮",cats:["labor","error","risk"],t:1},
+    a6:{n:"Cost Accounting Close Workspace",b:"🏁",cats:["labor","thru","error","risk"],t:3}
+  },
+  om: {
+    a1:{n:"Sales Order Assistant",b:"💬",cats:["labor","thru","rev","error"],t:2},
+    a2:{n:"Order Exception Assistant",b:"🚨",cats:["error","thru","labor","risk"],t:2},
+    a3:{n:"PO-to-Sales-Order Converter",b:"🔁",cats:["labor","error","thru","cash"],t:2},
+    a4:{n:"Sales Order Command Center",b:"🎛️",cats:["labor","thru","error","risk"],t:3},
+    a5:{n:"Sales Promotions Advisor",b:"🎁",cats:["rev","labor"],t:1},
+    a6:{n:"Fulfillment Processing Assistant",b:"🚀",cats:["thru","labor","risk","rev"],t:2}
+  },
+  mfg: {
+    a1:{n:"Operational Procedure Advisor",b:"📚",cats:["labor","error","risk"],t:1},
+    a2:{n:"Disposition Assistant for Rejects",b:"🩺",cats:["error","labor","thru","risk"],t:2},
+    a3:{n:"Operations Assignment Assistant",b:"🧩",cats:["thru","labor","risk"],t:2},
+    a4:{n:"Work Order Sync Assist",b:"🔄",cats:["error","labor","risk"],t:2},
+    a5:{n:"Production Shift Operations Workspace",b:"🌗",cats:["thru","labor","error","other"],t:3},
+    a6:{n:"Work Instructions Authoring Advisor",b:"✍️",cats:["labor","error","thru"],t:1}
+  },
+  scp: {
+    a1:{n:"Planning Order Release Assistant",b:"✅",cats:["labor","thru","error","risk"],t:2},
+    a2:{n:"Planning Advisor for Exceptions",b:"🚦",cats:["labor","risk","rev"],t:1},
+    a3:{n:"Measure Expression Assistant",b:"🧪",cats:["labor","error","other"],t:1},
+    a4:{n:"Planning Cycle Assistant",b:"🗓️",cats:["labor","thru","other"],t:1},
+    a5:{n:"Planning Stockout Advisor",b:"🧯",cats:["rev","risk","labor","cash"],t:2},
+    a6:{n:"Inventory Planning Command Center",b:"🛰️",cats:["rev","cash","labor","risk"],t:3}
+  },
+  fin: {
+    a1:{n:"Ledger Agent",b:"📒",cats:["labor","error","risk","thru"],t:2},
+    a2:{n:"Payables Agent",b:"🧾",cats:["labor","error","thru","risk","cash"],t:2},
+    a3:{n:"Payments Agent",b:"💳",cats:["cash","other","labor","risk"],t:2},
+    a4:{n:"Expenses Agent",b:"🧳",cats:["labor","error","risk","thru"],t:2},
+    a5:{n:"Cash Processing Agent",b:"🌊",cats:["cash","labor","error"],t:2},
+    a6:{n:"Collector Workspace",b:"📞",cats:["cash","labor","thru","risk"],t:3}
+  },
+  hcm: {
+    a1:{n:"Benefits Analyst",b:"🩹",cats:["labor","error","thru","other"],t:1},
+    a2:{n:"Performance & Goals Assistant",b:"🎯",cats:["labor","thru","error"],t:1},
+    a3:{n:"Compensation Advisor",b:"💰",cats:["error","labor","risk"],t:1},
+    a4:{n:"Hiring & Recruiting Agents",b:"🧲",cats:["labor","thru","error","risk","other"],t:3},
+    a5:{n:"Pay Analyst",b:"💵",cats:["labor","error","risk"],t:1},
+    a6:{n:"Talent Review Assistant",b:"🧭",cats:["labor","error","thru"],t:1}
+  },
+  epm: {
+    a1:{n:"IPM Insights",b:"🔬",cats:["labor","error","risk","thru"],t:2},
+    a2:{n:"Predictive Planning",b:"📈",cats:["labor","error","thru"],t:2},
+    a3:{n:"Predictive Cash Forecasting",b:"🌧️",cats:["cash","labor","risk","other"],t:2},
+    a4:{n:"Account Reconciliation AI",b:"🧷",cats:["labor","error","thru","risk"],t:2},
+    a5:{n:"Consolidation Assistant",b:"🧱",cats:["labor","thru","error","risk"],t:2},
+    a6:{n:"Narrative Reporting GenAI",b:"📝",cats:["labor","thru","error"],t:1}
+  }
+};
+const CATS = [
+  {id:"labor", label:"⏱ Time savings"},
+  {id:"cash",  label:"🌊 Cash flow"},
+  {id:"error", label:"🩹 Fewer errors"},
+  {id:"thru",  label:"🚀 Throughput"},
+  {id:"rev",   label:"📈 Revenue"},
+  {id:"risk",  label:"🛡️ Risk"},
+  {id:"other", label:"🎁 Other savings"}
+];
+const on = new Set(["labor"]);
+const $ = id => document.getElementById(id);
+const num = id => Math.max(0, parseFloat($(id).value) || 0);
+const fmt$ = v => {
+  const abs = Math.abs(v);
+  const s = abs >= 1e6 ? (abs/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M'
+    : abs >= 1e4 ? Math.round(abs/1e3) + 'k'
+    : Math.round(abs).toLocaleString('en-US');
+  return (v < 0 ? '-$' : '$') + s;
+};
+
+/* toggles */
+function renderTogs(){
+  const t = $('togs');
+  t.innerHTML = '';
+  CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'tog' + (on.has(c.id) ? ' on' : '');
+    b.innerHTML = `<span class="dot"></span>${c.label}`;
+    b.onclick = () => { on.has(c.id) ? on.delete(c.id) : on.add(c.id); renderTogs(); calc(); };
+    t.appendChild(b);
+  });
+  CATS.forEach(c => $('ben-' + c.id).classList.toggle('on', on.has(c.id)));
+}
+
+/* the model — same formulas as the source Excel workbook */
+function monthlyBenefits(){
+  const real = num('real')/100;
+  const f = id => on.has(id) ? 1 : 0;
+  return {
+    labor: num('l_emp')*num('l_hrs')*num('l_rate')*(num('l_red')/100)*real*f('labor'),
+    cash:  Math.max(num('c_dso0')-num('c_dso1'),0)/30*num('c_rev')*(num('c_cap')/100/12)*real*f('cash'),
+    error: num('e_vol')*((num('e_r0')-num('e_r1'))/100)*num('e_cost')*real*f('error'),
+    thru:  num('t_vol')*(num('t_pct')/100)*num('t_profit')*real*f('thru'),
+    rev:   num('r_base')*(num('r_pct')/100)*(num('r_margin')/100)*real*f('rev'),
+    risk:  num('k_base')*(num('k_pct')/100)/12*real*f('risk'),
+    other: num('o_amt')*real*f('other')
+  };
+}
+
+function calc(){
+  const b = monthlyBenefits();
+  CATS.forEach(c => { $('mo-' + c.id).textContent = on.has(c.id) ? `≈ ${fmt$(b[c.id])} / month` : ''; });
+  const impl = num('impl'), months = Math.max(1, Math.round(num('months')));
+  const moBenefit = Object.values(b).reduce((s,v)=>s+v,0);
+  const moCost = num('subm') + num('varm');
+  const netMo = moBenefit - moCost;
+  const totBenefit = moBenefit*months, totCost = moCost*months;
+  const netTotal = totBenefit - totCost - impl;
+  const denom = impl + totCost;
+  const roi = denom === 0 ? 0 : netTotal/denom;
+  const rMo = Math.pow(1 + num('disc')/100, 1/12) - 1;
+
+  // month-by-month, exactly like the Excel time series (month 0 pays implementation)
+  let cum = 0, npv = 0, payback = null;
+  const series = [];
+  for (let m = 0; m <= months; m++){
+    const cf = m === 0 ? -(moCost + impl) : netMo;
+    cum += cf;
+    npv += cf / Math.pow(1 + rMo, m);
+    series.push(cum);
+    if (payback === null && cum >= 0) payback = m;
+  }
+
+  $('k-netmo').textContent = fmt$(netMo);
+  $('k-netmo').className = 'v ' + (netMo >= 0 ? 'good' : 'bad');
+  $('k-roi').textContent = (roi*100).toFixed(0) + '%';
+  $('k-roi').className = 'v ' + (roi >= 0 ? 'good' : 'bad');
+  $('k-payback').textContent = payback === null ? 'Never 💔' : payback === 0 ? 'Instant' : `Month ${payback}`;
+  $('k-payback').className = 'v ' + (payback === null ? 'bad' : 'good');
+  $('k-npv').textContent = fmt$(npv);
+  $('k-npv').className = 'v ' + (npv >= 0 ? 'good' : 'bad');
+
+  const v = $('verdict');
+  if (moBenefit === 0) v.textContent = 'Toggle a benefit — even a great match needs something to give.';
+  else if (roi >= 2) v.textContent = 'Marry them. 💍';
+  else if (roi >= 0.5) v.textContent = 'Definitely a second date.';
+  else if (roi >= 0) v.textContent = 'Worth a coffee. Keep expectations managed.';
+  else v.textContent = "It's not you, it's the assumptions.";
+
+  drawChart(series);
+}
+
+function drawChart(series){
+  const svg = $('chart');
+  const W = 320, H = 150, pad = 6;
+  const min = Math.min(...series, 0), max = Math.max(...series, 0);
+  const range = max - min || 1;
+  const x = i => pad + (W - 2*pad) * i / (series.length - 1 || 1);
+  const y = v => pad + (H - 2*pad) * (1 - (v - min) / range);
+  const pts = series.map((v,i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const zero = y(0);
+  svg.innerHTML = `
+    <line x1="${pad}" y1="${zero}" x2="${W-pad}" y2="${zero}" stroke="#D8D2C4" stroke-width="1" stroke-dasharray="4 4"/>
+    <polyline points="${pts}" fill="none" stroke="url(#g)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FF4458"/><stop offset="1" stop-color="#0FA968"/>
+    </linearGradient></defs>`;
+}
+
+/* prefill from matchmaker handoff */
+function prefill(){
+  const p = new URLSearchParams(location.search);
+  const modId = p.get('mod'), agentId = p.get('agent');
+  const meta = AGENT_META[modId]?.[agentId];
+  if (!meta) return;
+  $('mc-badge').textContent = meta.b;
+  $('mc-name').textContent = meta.n;
+  $('match-chip').style.display = 'flex';
+  $('lede').textContent = `You matched with ${meta.n}. Now the awkward part: does this relationship pay for itself?`;
+  on.clear();
+  meta.cats.forEach(c => on.add(c));
+  $('impl').value = TIER_IMPL[meta.t];
+  $('impl-hint').textContent = `Pre-filled with a rough ${meta.t === 1 ? 'advisor-style' : meta.t === 2 ? 'workflow-agent' : 'agentic-workspace'} implementation estimate — consulting effort varies wildly. Edit freely.`;
+}
+
+document.querySelectorAll('input[type=number]').forEach(i => i.addEventListener('input', calc));
+prefill();
+renderTogs();
+calc();
+</script>
+</body></html>

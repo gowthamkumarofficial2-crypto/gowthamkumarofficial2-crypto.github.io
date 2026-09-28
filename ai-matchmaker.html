@@ -1,0 +1,614 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>The AI Agent Matchmaker — find your Oracle AI match</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Swipe your way to the Oracle AI agent you were meant to meet. A field experiment by Gowtham Kumar Shivakumar."><meta property="og:title" content="The AI Agent Matchmaker"><meta property="og:description" content="Swipe right on your worst workdays. Get matched with the Oracle AI agent built for them."><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png"><link rel="apple-touch-icon" href="apple-touch-icon-180.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet"><style>/* The AI Agent Matchmaker — Coral Crush build */
+:root{
+  --bg:#141821;
+  --card:#FAF7F2;
+  --card-ink:#141821;
+  --ink:#F5F1EA;
+  --muted:#9AA3B2;
+  --coral1:#FD297B;
+  --coral2:#FF655B;
+  --yes:#2BD98F;
+  --no:#FF4458;
+  --pop:#FFC629;
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --grad:linear-gradient(135deg,var(--coral1),var(--coral2));
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden}
+a{color:inherit}
+/* ambient glow blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.22;pointer-events:none;z-index:0}
+.blob.b1{width:420px;height:420px;background:#FD297B;top:-140px;right:-120px}
+.blob.b2{width:380px;height:380px;background:#8338EC;bottom:-140px;left:-140px}
+@media (prefers-reduced-motion: no-preference){
+  .blob.b1{animation:drift 16s ease-in-out infinite alternate}
+  .blob.b2{animation:drift 19s ease-in-out infinite alternate-reverse}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-60px,50px) scale(1.15)}}
+}
+.site-head{display:flex;justify-content:space-between;align-items:center;padding:1rem 5vw;position:relative;z-index:2}
+.wordmark{font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--ink);text-decoration:none}
+.wordmark .dot{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.head-link{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.head-link:hover{color:var(--ink)}
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 5vw 3rem;width:100%;position:relative;z-index:1}
+.stage{width:100%;max-width:620px;margin:0 auto}
+.screen{display:none}
+.screen.active{display:block}
+@media (prefers-reduced-motion: no-preference){
+  .screen.active{animation:rise .4s cubic-bezier(.175,.885,.32,1.275)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--pop);margin:2rem 0 .8rem;text-align:center}
+h1.app-title{font-family:var(--display);font-weight:900;font-size:clamp(2.3rem,8vw,3.6rem);line-height:1.02;margin:.2rem 0 1rem;text-align:center;letter-spacing:-.02em}
+h1.app-title .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--muted);text-align:center;max-width:32rem;margin:0 auto 2rem;font-size:1.05rem}
+.center{text-align:center}
+/* buttons */
+.btn{display:inline-block;font-family:var(--display);font-weight:800;font-size:1rem;letter-spacing:.02em;padding:1rem 2.2rem;border:none;border-radius:999px;color:#fff;background:var(--grad);text-decoration:none;cursor:pointer;box-shadow:0 8px 30px rgba(253,41,123,.35);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(253,41,123,.45)}
+.btn:active{transform:scale(.95)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid #2A3140;box-shadow:none}
+.btn.ghost:hover{color:var(--ink);border-color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){
+  .pulse{animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(253,41,123,.35)}50%{box-shadow:0 8px 44px rgba(253,41,123,.65)}}
+}
+.foot-note{text-align:center;color:var(--muted);font-size:.8rem;margin-top:1.8rem}
+/* module grid */
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem;margin:1.6rem 0 2rem}
+.mod-card{position:relative;background:#1B2230;border:2px solid transparent;border-radius:18px;padding:1.15rem 1rem 1rem;cursor:pointer;text-align:left;color:var(--ink);font-family:var(--body);transition:transform .18s,border-color .18s,box-shadow .18s;overflow:hidden}
+.mod-card:hover,.mod-card:focus-visible{transform:translateY(-4px) rotate(-.5deg);border-color:var(--mc);box-shadow:0 10px 30px color-mix(in srgb,var(--mc) 30%, transparent)}
+.mod-card:active{transform:scale(.96)}
+.mod-card .mod-emoji{font-size:1.5rem;display:block;margin-bottom:.35rem}
+.mod-card .mod-name{font-family:var(--display);font-weight:800;font-size:1.05rem;line-height:1.2;display:block}
+.mod-card .mod-sub{color:var(--muted);font-size:.78rem;margin-top:.25rem;display:block}
+.mod-card::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--mc)}
+/* deck */
+.deck-head{display:flex;justify-content:space-between;align-items:center;margin:1.4rem 0 1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.prog{display:flex;gap:6px}
+.prog i{width:16px;height:6px;border-radius:3px;background:#2A3140;transition:background .3s,transform .3s}
+.prog i.done{background:var(--grad-solid,var(--coral1))}
+.prog i.now{background:var(--pop);transform:scaleY(1.4)}
+.deck{position:relative;height:400px;margin:0 auto;max-width:460px;touch-action:pan-y}
+.card{position:absolute;inset:0;background:var(--card);color:var(--card-ink);border-radius:22px;padding:1.6rem 1.5rem;display:flex;flex-direction:column;justify-content:space-between;user-select:none;-webkit-user-select:none;cursor:grab;will-change:transform;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.card:active{cursor:grabbing}
+.card .q-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#7A8494}
+.card .q-emoji{font-size:2rem;margin-top:.6rem}
+.card .q-text{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,6vw,1.9rem);line-height:1.16;margin:auto 0;padding:.8rem 0;letter-spacing:-.01em}
+.card .q-hint{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#9AA3B2}
+.card .tint{position:absolute;inset:0;border-radius:22px;opacity:0;pointer-events:none}
+.card .tint.yes{background:rgba(43,217,143,.18)}
+.card .tint.no{background:rgba(255,68,88,.18)}
+.card .verdict{position:absolute;top:1.2rem;font-family:var(--display);font-weight:900;font-size:1.15rem;letter-spacing:.14em;text-transform:uppercase;padding:.3rem .8rem;border:3px solid;border-radius:8px;opacity:0}
+.card .verdict.yes{left:1.2rem;color:var(--yes);border-color:var(--yes);transform:rotate(-12deg)}
+.card .verdict.no{right:1.2rem;color:var(--no);border-color:var(--no);transform:rotate(12deg)}
+.deck-actions{display:flex;justify-content:center;gap:1.6rem;margin:1.6rem 0 0}
+.swipe-btn{width:66px;height:66px;border-radius:50%;border:none;font-size:1.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;color:#fff}
+.swipe-btn.no{background:#232A38;box-shadow:0 6px 20px rgba(255,68,88,.25)}
+.swipe-btn.yes{background:linear-gradient(135deg,#2BD98F,#19B877);box-shadow:0 6px 20px rgba(43,217,143,.35)}
+.swipe-btn:hover{transform:scale(1.1)}
+.swipe-btn:active{transform:scale(.9)}
+.deck-foot{text-align:center;margin-top:.9rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);min-height:1.2em}
+.deck-foot .cheer{color:var(--pop)}
+/* calculating */
+#scr-calc{text-align:center;padding-top:16vh}
+.calc-emoji{font-size:3.2rem;display:inline-block}
+@media (prefers-reduced-motion: no-preference){
+  .calc-emoji{animation:spinher 1s ease-in-out infinite}
+  @keyframes spinher{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.18)}}
+}
+.calc-text{font-family:var(--display);font-weight:800;font-size:1.4rem;margin-top:1rem}
+.calc-dots::after{content:"";animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+/* match reveal */
+.flash{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,rgba(253,41,123,.65),transparent 70%);opacity:0;pointer-events:none;z-index:50}
+@media (prefers-reduced-motion: no-preference){
+  .flash.go{animation:flash .5s ease-out}
+  @keyframes flash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+}
+.match-title{font-family:var(--display);font-weight:900;font-size:clamp(2.4rem,9vw,3.4rem);text-align:center;margin:1.6rem 0 .4rem;letter-spacing:-.02em}
+.match-title span{display:inline-block}
+@media (prefers-reduced-motion: no-preference){
+  .match-title span{opacity:0;animation:popin .45s cubic-bezier(.175,.885,.32,1.275) forwards;animation-delay:var(--d)}
+  @keyframes popin{from{opacity:0;transform:translateY(18px) scale(.6)}to{opacity:1;transform:none}}
+}
+.match-card{position:relative;background:var(--card);color:var(--card-ink);border-radius:24px;padding:1.8rem 1.6rem 1.6rem;margin:1.2rem 0;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+.match-card::before{content:"";position:absolute;top:0;left:0;right:0;height:7px;background:var(--grad)}
+.m-badge{font-size:2.6rem;display:inline-block}
+@media (prefers-reduced-motion: no-preference){
+  .m-badge{animation:badge .5s cubic-bezier(.175,.885,.32,1.275) .3s backwards}
+  @keyframes badge{0%{transform:scale(0)}70%{transform:scale(1.18)}100%{transform:scale(1)}}
+}
+.m-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:#7A8494;margin:.4rem 0 .2rem}
+.m-name{font-family:var(--display);font-weight:900;font-size:clamp(1.5rem,6vw,2.1rem);line-height:1.08;margin:0 0 .5rem;letter-spacing:-.01em}
+.m-pct{font-family:var(--display);font-weight:900;font-size:1.5rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:.7rem}
+.m-bio{font-size:1.02rem;margin:0 0 1.1rem;color:#39404E}
+.m-facts{border-top:2px dashed #E4DED2;padding-top:1rem;display:grid;gap:.8rem}
+.fact-k{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:#B0693F;display:block;margin-bottom:.1rem}
+.fact-v{color:#39404E;font-size:.92rem}
+.m-url{margin-top:1.1rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:#9AA3B2;text-align:right}
+.runners{margin:1.4rem 0}
+.runners h3{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0 0 .7rem}
+.runner{display:flex;justify-content:space-between;align-items:center;background:#1B2230;border-radius:14px;padding:.75rem 1rem;margin-bottom:.5rem}
+.runner .r-name{font-family:var(--display);font-weight:700;font-size:.95rem}
+.runner .r-pct{font-family:var(--mono);font-size:.8rem;color:var(--pop)}
+.reveal-ctas{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1.6rem}
+/* confetti */
+.confetti-wrap{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:40}
+.cf{position:absolute;top:-4vh;width:10px;height:14px;border-radius:2px;background:hsl(var(--h),90%,60%);left:var(--x);opacity:0}
+@media (prefers-reduced-motion: no-preference){
+  .cf{animation:fall var(--dur) ease-in var(--delay) forwards}
+  @keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:.9;transform:translateY(110vh) rotate(var(--spin))}}
+}
+.post-foot{padding:1.2rem 5vw;position:relative;z-index:2}
+.post-foot .back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.post-foot .back:hover{color:var(--ink)}
+@media(max-width:560px){
+  .mod-grid{gap:.6rem}
+  .mod-card{padding:.95rem .85rem .85rem;border-radius:14px}
+  .deck{height:380px}
+}
+</style></head><body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="flash" id="flash"></div>
+<header class="site-head"><a class="wordmark" href="index.html">GKS<span class="dot">.</span></a><a class="head-link" href="index.html">The Blog</a></header>
+<main>
+<div class="stage">
+
+  <!-- SCREEN 1: intro -->
+  <section class="screen active" id="scr-intro">
+    <p class="eyebrow">A field experiment · Oracle AI</p>
+    <h1 class="app-title">The AI Agent <span class="grad">Matchmaker</span> 💘</h1>
+    <p class="lede">Oracle shipped a whole roster of AI agents. One of them is built for the exact problems that eat your week. Swipe through a few painfully honest statements and meet the one you deserve.</p>
+    <p class="center"><button class="btn pulse" onclick="showScreen('scr-modules')">Find my match</button></p>
+    <p class="foot-note">No sign-up. No data collected. About a minute of your life.</p>
+  </section>
+
+  <!-- SCREEN 2: module picker -->
+  <section class="screen" id="scr-modules">
+    <p class="eyebrow">Step 1 of 2</p>
+    <h1 class="app-title">Where do you <span class="grad">live</span> all day?</h1>
+    <p class="lede">Pick your world. You'll only see statements that hit home.</p>
+    <div class="mod-grid" id="mod-grid"></div>
+  </section>
+
+  <!-- SCREEN 3: swipe deck -->
+  <section class="screen" id="scr-deck">
+    <div class="deck-head"><span id="deck-module"></span><span class="prog" id="prog"></span></div>
+    <div class="deck" id="deck"></div>
+    <div class="deck-actions">
+      <button class="swipe-btn no" onclick="swipe(-1)" aria-label="Not me">✕</button>
+      <button class="swipe-btn yes" onclick="swipe(1)" aria-label="That's me">❤</button>
+    </div>
+    <p class="deck-foot" id="deck-foot">Swipe right if it's you · left if it isn't</p>
+  </section>
+
+  <!-- SCREEN 3.5: calculating -->
+  <section class="screen" id="scr-calc">
+    <span class="calc-emoji">💘</span>
+    <p class="calc-text">Reading your swipes<span class="calc-dots"></span></p>
+    <p class="foot-note" id="calc-line">Cross-referencing your red flags…</p>
+  </section>
+
+  <!-- SCREEN 4: match reveal -->
+  <section class="screen" id="scr-match">
+    <h1 class="match-title" id="match-title" aria-label="It's a match"></h1>
+    <div class="match-card">
+      <span class="m-badge" id="m-badge"></span>
+      <p class="m-label">Your match</p>
+      <h2 class="m-name" id="m-name"></h2>
+      <p class="m-pct"><span id="m-pct">0</span>% match</p>
+      <p class="m-bio" id="m-bio"></p>
+      <div class="m-facts">
+        <div><span class="fact-k">What it actually does</span><span class="fact-v" id="m-does"></span></div>
+        <div><span class="fact-k">Where it lives in Oracle</span><span class="fact-v" id="m-where"></span></div>
+      </div>
+      <p class="m-url">gowthamkumarshivakumar.com/ai-matchmaker</p>
+    </div>
+    <div class="runners" id="m-runners"></div>
+    <div class="reveal-ctas">
+      <a class="btn" id="m-roi" href="ai-roi-calculator.html">💰 Run the numbers on this match</a>
+      <button class="btn ghost" id="m-share" onclick="shareMatch()">Share your match</button>
+      <button class="btn ghost" onclick="restart()">Start over</button>
+    </div>
+    <p class="foot-note">Match percentages are for fun. The agents are real. Verify features against your release and licensing before you commit — it's still Oracle.</p>
+  </section>
+
+</div>
+</main>
+<footer class="post-foot"><a class="back" href="index.html">← Back to the blog</a></footer>
+<script>
+/* ============ DATA — Oracle AI agents & features per Oracle readiness docs, releases 25B–26C (verified 2026-09-28) ============ */
+const MODULES = [
+  {id:"proc", emoji:"🛒", hue:"#FD297B", name:"Procurement & P2P", sub:"Reqs, POs, invoices, suppliers"},
+  {id:"inv",  emoji:"📦", hue:"#FFC629", name:"Inventory & Costing", sub:"Stock, counts, cost accounting"},
+  {id:"om",   emoji:"🚚", hue:"#3A86FF", name:"Order Management", sub:"Orders, pricing, fulfillment"},
+  {id:"mfg",  emoji:"🏭", hue:"#FB5607", name:"Manufacturing", sub:"Work orders, shop floor"},
+  {id:"scp",  emoji:"🔮", hue:"#2BD98F", name:"Supply Planning", sub:"Demand, supply, S&OP"},
+  {id:"fin",  emoji:"💸", hue:"#8338EC", name:"Finance / ERP", sub:"GL, AP, AR, close"},
+  {id:"hcm",  emoji:"🧑‍🤝‍🧑", hue:"#FF006E", name:"HCM", sub:"HR, talent, payroll"},
+  {id:"epm",  emoji:"📊", hue:"#00BFA6", name:"EPM", sub:"Planning, close, recon"}
+];
+
+const AGENTS = {
+  proc: [
+    {id:"a1", badge:"🧾", name:"Payables Agent", bio:"Reads every invoice, in any format, and never complains about the scan quality.", does:"Ingests invoices from email, portals, EDI and PDFs; extracts and validates the data, matches to POs and receipts, builds the accounting, and routes exceptions to one hub.", where:"Oracle Payables — its own Navigator entry (release 26B)"},
+    {id:"a2", badge:"📖", name:"Procurement Policy Advisor", bio:"Has actually read the procurement policy. All of it. Twice.", does:"Answers policy and how-to questions inside the requisition flow, flags what's missing for a compliant req, and recommends products.", where:"Self Service Procurement"},
+    {id:"a3", badge:"📨", name:"Quote-to-Requisition Assistant", bio:"Turns supplier quote PDFs into draft requisitions before your coffee cools.", does:"Parses supplier quotes from email or chat upload, extracts the lines, maps them to requisition fields, and creates a draft req for your review.", where:"Self Service Procurement (25D; chat upload in 26B)"},
+    {id:"a4", badge:"⚖️", name:"Autonomous Sourcing Assistant", bio:"Runs the small competitive bids you never had time for.", does:"Converts eligible requisition lines into negotiations per your sourcing policy, invites suppliers, publishes after approval — a partner agent then awards closed negotiations.", where:"Oracle Sourcing (26A)"},
+    {id:"a5", badge:"🤝", name:"Supplier Portal Advisor", bio:"Answers 'how do I invoice you?' for the thousandth time, cheerfully.", does:"A chat agent in the Supplier Portal that answers suppliers' policy, invoicing, and process questions from your uploaded documents.", where:"Supplier Portal (25C)"},
+    {id:"a6", badge:"🔎", name:"Requisition Status Advisor", bio:"Knows exactly whose desk your req is stuck on. And will say it.", does:"Answers 'where is my requisition?' — including naming the current pending approver — and guides casual users through creating correct reqs.", where:"Self Service Procurement (25C/26B)"}
+  ],
+  inv: [
+    {id:"a1", badge:"🕰️", name:"Inventory Aging Advisor", bio:"Finds the stock you forgot you owned.", does:"Analyzes turns, weighted age and sales percentage to spot slow, non-moving and obsolete stock, then recommends scrap, subinventory moves, or transfers to where demand exists.", where:"Item Quantities page, Inventory Management (26A)"},
+    {id:"a2", badge:"🔢", name:"Cycle Count Analysis Advisor", bio:"Remembers every count variance you'd rather forget.", does:"Analyzes historical cycle counts to surface top missed items, top missed locations, and top shrinkage by cost — so you fix root causes, not symptoms.", where:"Inventory cycle counting (26A)"},
+    {id:"a3", badge:"📬", name:"ASN Creation Assistant", bio:"Turns messy supplier shipping emails into clean ASNs.", does:"Paste shipment details from a supplier email into chat; it builds the complete Advance Shipment Notice for you.", where:"Responsive Receiving, Inventory Management (25D)"},
+    {id:"a4", badge:"🚢", name:"Landed Cost Estimation Advisor", bio:"Knows what that part really costs once freight, duty and insurance pile on.", does:"Estimates probable landed cost per item and supplier from your transaction history, with charge-level breakdowns and supplier comparisons — before the PO exists.", where:"Landed Cost Management (26A)"},
+    {id:"a5", badge:"🧮", name:"Supplier Accruals Assistant", bio:"Scrubs open accruals so close doesn't eat your weekend.", does:"Analyzes open accruals by supplier, age and PO, validates clearing decisions against your policy documents, and flags what genuinely needs review.", where:"Open Accrual Balances page, Cost Management (26A)"},
+    {id:"a6", badge:"🏁", name:"Cost Accounting Close Workspace", bio:"Watches close readiness so you can stop refreshing dashboards.", does:"An agentic workspace where cost accountants monitor period-close readiness with AI summaries and recommended actions across processing exceptions.", where:"Cost Management (26B, enhanced 26C)"}
+  ],
+  om: [
+    {id:"a1", badge:"💬", name:"Sales Order Assistant", bio:"Takes an order in plain English, including the weird configurations.", does:"Conversational order capture: finds the right customer, discovers and compares products, prices the order, checks real-time availability and ship dates, and drafts it.", where:"Order Management work area (25D/26A)"},
+    {id:"a2", badge:"🚨", name:"Order Exception Assistant", bio:"Finds stuck orders before your customer does.", does:"Continuously monitors orders, flags exceptions in real time, diagnoses root causes, and launches corrective actions — including recovering stuck orders.", where:"Order Management (25D–26C)"},
+    {id:"a3", badge:"🔁", name:"PO-to-Sales-Order Converter", bio:"Reads customer PO PDFs so nobody has to rekey them. Ever.", does:"Extracts data from customer purchase orders — it can even monitor an email inbox — and creates and submits the corresponding sales orders, summarizing exceptions.", where:"Order Management (25D; touchless email variant 26C)"},
+    {id:"a4", badge:"🎛️", name:"Sales Order Command Center", bio:"One screen for every fire currently burning in fulfillment.", does:"An agentic workspace surfacing backorders, reservation failures, holds and returns with AI summaries and priority actions; 'Ask Oracle' handles holds and returns by text or voice.", where:"Order Management (26B/26C)"},
+    {id:"a5", badge:"🎁", name:"Sales Promotions Advisor", bio:"Never forgets an active promotion. Unlike everyone else.", does:"Analyzes a draft order and recommends applicable promotions, cross-sells and upsells, then applies the chosen one to the order lines.", where:"Order Management — Offers & Benefits on a draft order (25C)"},
+    {id:"a6", badge:"🚀", name:"Fulfillment Processing Assistant", bio:"Gets the urgent one out the door today.", does:"Expedites urgent shipping requests end to end: retrieves order status, initiates picking, recommends packing, and executes shipping for high-priority orders.", where:"Inventory / shipping execution flows (26A)"}
+  ],
+  mfg: [
+    {id:"a1", badge:"📚", name:"Operational Procedure Advisor", bio:"Knows every SOP by heart. Even the ones in the binder nobody opens.", does:"Answers operators' natural-language questions about procedures — safety, setup, material handling — straight from your own uploaded documents.", where:"Redwood Manufacturing pages (25C)"},
+    {id:"a2", badge:"🩺", name:"Disposition Assistant for Rejects", bio:"Decides scrap-or-rework without calling a meeting.", does:"On rejected units, recommends scrap, rework, or return based on reason codes, transaction history, and your procedures — then executes the chosen action.", where:"Production Supervisor Workbench (25D)"},
+    {id:"a3", badge:"🧩", name:"Operations Assignment Assistant", bio:"Re-balances the shop floor the moment a machine sulks.", does:"Watches real-time work-center data and recommends assigning, reassigning and resequencing operations across workstations; you confirm, it executes.", where:"Work Center Monitoring (26A)"},
+    {id:"a4", badge:"🔄", name:"Work Order Sync Assist", bio:"Chases your engineering changes into every open work order.", does:"When a work definition changes, finds all impacted work orders, runs what-if impact analysis, and propagates approved changes selectively.", where:"Work Definition → Operations (26A)"},
+    {id:"a5", badge:"🌗", name:"Production Shift Operations Workspace", bio:"Runs the shift-handover meeting you keep skipping.", does:"A supervisor workspace bundling five advisors — bottlenecks, production health (OEE, yield, scrap anomalies), operators, exceptions, and Ask Oracle — with shift handover support.", where:"Quick Actions → Production Shift Operations Workspace (26B)"},
+    {id:"a6", badge:"✍️", name:"Work Instructions Authoring Advisor", bio:"Writes the first draft so engineers only have to edit.", does:"Recommends the key work-instruction steps for a specific product and operation, using GenAI over your existing documents.", where:"Work definition authoring (25B/25C)"}
+  ],
+  scp: [
+    {id:"a1", badge:"✅", name:"Planning Order Release Assistant", bio:"Clears your planned-order queue before lunch.", does:"You state release rules in plain English; it evaluates every planned order, flags true exceptions for review, and stages the rest. Oracle cites ~60% faster releases.", where:"Supply Planning — plan Actions menu (26A)"},
+    {id:"a2", badge:"🚦", name:"Planning Advisor for Exceptions", bio:"Reads five thousand exceptions so you can read five.", does:"Conversational triage of demand, supply, resource and supplier exceptions with prioritized top-five summaries, plus planning-notes retrieval.", where:"Planning Advisor menu (25D)"},
+    {id:"a3", badge:"🧪", name:"Measure Expression Assistant", bio:"Writes planning formulas from plain English. No syntax grief.", does:"Generates and troubleshoots measure expressions from a description, and explains what existing ones actually do. Oracle cites KPI builds going from 2 hours to 10 minutes.", where:"Measure editor 'AI Assist' — Demand, Supply, S&OP (26A)"},
+    {id:"a4", badge:"🗓️", name:"Planning Cycle Assistant", bio:"Keeps the S&OP cycle honest without the chase emails.", does:"Chat for S&OP cycle management: worklists, task statuses, action items, decision items and approvals — with deep links into the right plan views.", where:"Planning Advisor, S&OP (26A; requires S&OP license)"},
+    {id:"a5", badge:"🧯", name:"Planning Stockout Advisor", bio:"Finds tomorrow's stockout while it's still fixable.", does:"Surfaces top stockouts with quantified impact, runs per-item-location root-cause analysis, and recommends exactly which orders to expedite.", where:"Planning Advisor drawer (26B; needs Replenishment Planning)"},
+    {id:"a6", badge:"🛰️", name:"Inventory Planning Command Center", bio:"Turns stockouts into a ranked to-do list with revenue attached.", does:"Analyzes replenishment stockouts and generates simulatable recommendations — expedites, new orders, or policy changes — with revenue-at-risk quantified.", where:"Supply Chain Planning work area (26C, on by default)"}
+  ],
+  fin: [
+    {id:"a1", badge:"📒", name:"Ledger Agent", bio:"Watches the GL so month-end stops being a surprise party.", does:"Always-on ledger monitoring with natural-language prompts and variance thresholds; explains balances and anomalies with supporting detail, and can create adjustment journals.", where:"General Ledger / ERP Agents workspace (26A/26B)"},
+    {id:"a2", badge:"🧾", name:"Payables Agent", bio:"Processes invoices while you do literally anything else.", does:"Multi-channel invoice ingestion with extraction, PO/receipt matching, accounting, tax, duplicate and fraud checks — straight-through processing with one exception hub.", where:"Payables — dedicated Navigator entry (26B)"},
+    {id:"a3", badge:"💳", name:"Payments Agent", bio:"Never met an early-pay discount it didn't calculate.", does:"Evaluates when and how to pay: early-payment discounts, virtual cards, financing options; monitors execution and bank acknowledgements.", where:"Payables / Payments (26B)"},
+    {id:"a4", badge:"🧳", name:"Expenses Agent", bio:"Files your expense report from one forwarded email.", does:"Employees forward receipts by email; it extracts details, matches to card charges, checks policy compliance, and triggers reimbursement. No app login required.", where:"Oracle Expenses (26B)"},
+    {id:"a5", badge:"🌊", name:"Cash Processing Agent", bio:"Applies the cash that used to live in 'unidentified'.", does:"Surfaces receipt and remittance exceptions, matches receipts to invoices via natural language, and applies cash with your confirmation.", where:"Receivables (26C, on by default)"},
+    {id:"a6", badge:"📞", name:"Collector Workspace", bio:"Ranks who to call first — and drafts the awkward email.", does:"An AI-prioritized collections worklist with account risk summaries, next-best actions, and policy-aware customer communications to accelerate cash recovery.", where:"Advanced Collections (26C)"}
+  ],
+  hcm: [
+    {id:"a1", badge:"🩹", name:"Benefits Analyst", bio:"Explains your dental plan without judging your flossing.", does:"Answers employees' benefits questions tailored to their own plans and enrollment data; newer releases can simulate life events against plan options.", where:"Benefits self-service (Redwood)"},
+    {id:"a2", badge:"🎯", name:"Performance & Goals Assistant", bio:"Turns 'do better' into an actual SMART goal.", does:"Helps employees write and refine goals and track progress; helps managers draft performance evaluations and improvement plans with individualized feedback.", where:"Goal Management / Performance Documents"},
+    {id:"a3", badge:"💰", name:"Compensation Advisor", bio:"Knows what you can offer before you promise it.", does:"Salary-decision guidance for hires, promotions and comp cycles using company policy, market composites, and peer-group benchmarking.", where:"Compensation / manager self-service"},
+    {id:"a4", badge:"🧲", name:"Hiring & Recruiting Agents", bio:"Screens two hundred resumes without a single sigh.", does:"Generates job postings, screens applicants, summarizes interviews, answers candidate emails, and builds sourcing campaigns; candidates can apply conversationally.", where:"Oracle Recruiting — Hiring Workspace"},
+    {id:"a5", badge:"💵", name:"Pay Analyst", bio:"Answers 'why is my paycheck different?' with actual math.", does:"Explains payslips with payroll-policy grounding; a companion Tax Withholding Guide walks US employees through W-4 elections.", where:"Payroll self-service"},
+    {id:"a6", badge:"🧭", name:"Talent Review Assistant", bio:"Brings receipts to the calibration meeting.", does:"Synthesizes performance, goals, feedback and check-in data for talent reviews; the workspace adds rating actions and AI-generated meeting summaries.", where:"Talent Management — calibration flows"}
+  ],
+  epm: [
+    {id:"a1", badge:"🔬", name:"IPM Insights", bio:"Finds the sandbagged forecast and names it. Politely.", does:"Auto-scans plans, forecasts and actuals for variance, bias, trend and anomaly insights, with GenAI narrative summaries on top.", where:"Insights dashboard — Planning, FCC, EPCM, Tax Reporting"},
+    {id:"a2", badge:"📈", name:"Predictive Planning", bio:"Gives your forecast an unbiased second opinion.", does:"Time-series predictions directly in forms and grids; Auto Predict runs prediction definitions at scale to seed forecasts and challenge human plans.", where:"EPM Planning and FreeForm"},
+    {id:"a3", badge:"🌧️", name:"Predictive Cash Forecasting", bio:"Sees the cash cliff ten days before you fall off it.", does:"Rolling daily and mid-term cash forecasts with ML-predicted receivables inflows learned from customer payment behavior; pulls actuals from Oracle ERP.", where:"EPM Planning — Predictive Cash Forecasting app"},
+    {id:"a4", badge:"🧷", name:"Account Reconciliation AI", bio:"Ticks and ties while you sleep.", does:"ML transaction matching without hand-built rules, auto-assigned reconciliation attributes, plus four chat assistants for admins and users.", where:"Account Reconciliation (assistants June 2026)"},
+    {id:"a5", badge:"🧱", name:"Consolidation Assistant", bio:"Diagnoses the slow consolidation instead of blaming the network.", does:"Chat that diagnoses slow or failing consolidations, analyzes metric anomalies and recommends fixes; a sibling assistant handles approvals conversationally.", where:"Financial Consolidation and Close (Sept 2026)"},
+    {id:"a6", badge:"📝", name:"Narrative Reporting GenAI", bio:"Writes the variance commentary nobody volunteers for.", does:"Generates report narrative for exceptions, causality and prior-period comparisons — you edit and approve; plus chat Q&A over report data.", where:"Narrative Reporting / Management Reports"}
+  ]
+};
+const QUESTIONS = {
+  proc: [
+    {tag:"Invoices", emoji:"🧾", text:"Invoice holds are a recurring character in my month.", w:{a1:3}},
+    {tag:"Policy", emoji:"📖", text:"People ask me what the purchasing policy is instead of reading it.", w:{a2:3, a5:1}},
+    {tag:"Quotes", emoji:"📋", text:"I retype supplier quotes into requisitions like it's 1999.", w:{a3:3}},
+    {tag:"Tail spend", emoji:"🛍️", text:"We have tail spend nobody ever gets around to competitively bidding.", w:{a4:3}},
+    {tag:"Suppliers", emoji:"🤝", text:"Onboarding one supplier takes more emails than onboarding one employee.", w:{a5:3, a4:1}},
+    {tag:"Approvals", emoji:"⏳", text:"My requisitions sit in approval limbo longer than they take to fulfill.", w:{a6:3, a2:1}},
+    {tag:"Matching", emoji:"🔍", text:"I can explain two-, three-, and four-way match from memory. Unfortunately.", w:{a1:2, a2:1}},
+    {tag:"Honesty", emoji:"🫣", text:"I have approved a requisition without reading it. This week.", w:{a2:2, a6:2}}
+  ],
+  inv: [
+    {tag:"Dead stock", emoji:"🧊", text:"There are pallets in my warehouse that haven't moved since last fiscal year.", w:{a1:3}},
+    {tag:"Counts", emoji:"📋", text:"The same items miss count, in the same locations, every single cycle.", w:{a2:3}},
+    {tag:"Receiving", emoji:"📦", text:"Suppliers ship things without telling the system. The dock loves surprises.", w:{a3:3}},
+    {tag:"True cost", emoji:"🚢", text:"We compare suppliers on unit price and act shocked by the freight bill.", w:{a4:3}},
+    {tag:"Accruals", emoji:"🧮", text:"Month end is me, a giant accrual report, and questionable life choices.", w:{a5:3, a6:1}},
+    {tag:"Close", emoji:"🏁", text:"The cost close is a group chat of 'is it done yet?'", w:{a6:3, a5:1}},
+    {tag:"Write-offs", emoji:"💸", text:"Quarter-end obsolescence write-offs are always a surprise. A bad one.", w:{a1:2, a2:1}},
+    {tag:"Shrinkage", emoji:"🕵️", text:"High-value SKUs vanish and the audit findings write themselves.", w:{a2:2, a1:1}}
+  ],
+  om: [
+    {tag:"Rekeying", emoji:"🔁", text:"Customers still send POs as PDFs, and someone retypes every line.", w:{a3:3}},
+    {tag:"Stuck orders", emoji:"🚨", text:"I find out an order is stuck when the customer calls.", w:{a2:3, a4:1}},
+    {tag:"Order entry", emoji:"💬", text:"Taking one phone order means seven screens and a prayer.", w:{a1:3}},
+    {tag:"Triage", emoji:"🎛️", text:"My morning starts with a backorder report older than my coffee.", w:{a4:3, a2:1}},
+    {tag:"Promotions", emoji:"🎁", text:"We run promotions our own order desk doesn't know about.", w:{a5:3}},
+    {tag:"Expedites", emoji:"🚀", text:"'Can you ship it today?' — every day, someone, always.", w:{a6:3}},
+    {tag:"Promising", emoji:"📅", text:"I promise ship dates with the confidence of a weather forecast.", w:{a1:2, a4:1}},
+    {tag:"Returns", emoji:"↩️", text:"Returns processing is where my patience goes to die.", w:{a4:2, a1:1}}
+  ],
+  mfg: [
+    {tag:"SOPs", emoji:"📚", text:"Operators stop the line to go find a binder.", w:{a1:3}},
+    {tag:"Rejects", emoji:"🩺", text:"Every reject turns into a debate about scrap versus rework.", w:{a2:3}},
+    {tag:"Downtime", emoji:"🧩", text:"One machine goes down and I re-juggle the whole dispatch list by hand.", w:{a3:3, a5:1}},
+    {tag:"ECOs", emoji:"🔄", text:"Engineering changes never quite reach the work orders already released.", w:{a4:3}},
+    {tag:"Handover", emoji:"🌗", text:"Shift handover is a sticky note and good intentions.", w:{a5:3}},
+    {tag:"Instructions", emoji:"✍️", text:"Our work instructions were written once, for products we no longer make.", w:{a6:3, a4:1}},
+    {tag:"Yield", emoji:"📉", text:"I learn about yield problems from the month-end report, not the floor.", w:{a5:2, a2:1}},
+    {tag:"Tribal", emoji:"🧠", text:"If two specific people retire, we can no longer build the product.", w:{a1:2, a6:2}}
+  ],
+  scp: [
+    {tag:"Exceptions", emoji:"🚦", text:"My plan generates more exceptions than I have coworkers. Combined.", w:{a2:3}},
+    {tag:"Releases", emoji:"✅", text:"I scroll planned-order grids until my eyes give out, then release on vibes.", w:{a1:3}},
+    {tag:"Formulas", emoji:"🧪", text:"Building one new planning KPI involves syntax grief and a support ticket.", w:{a3:3}},
+    {tag:"S&OP", emoji:"🗓️", text:"S&OP prep is me chasing task statuses across email, chat, and hope.", w:{a4:3}},
+    {tag:"Stockouts", emoji:"🧯", text:"We discover stockouts when the order fails, not before.", w:{a5:3, a6:1}},
+    {tag:"Expedites", emoji:"💸", text:"Our answer to every shortage is one giant panic expedite.", w:{a6:3, a5:1}},
+    {tag:"Safety stock", emoji:"📦", text:"Our safety stock settings predate at least two reorgs.", w:{a6:2, a5:1}},
+    {tag:"Forecast", emoji:"🔮", text:"The forecast is a work of fiction with a spreadsheet attached.", w:{a2:2, a1:1}}
+  ],
+  fin: [
+    {tag:"Variances", emoji:"📒", text:"I find material variances the way archaeologists find pottery: late, by digging.", w:{a1:3}},
+    {tag:"AP inbox", emoji:"🧾", text:"Our AP inbox is a haunted house of PDFs in seventeen formats.", w:{a2:3}},
+    {tag:"Discounts", emoji:"💳", text:"We take early-pay discounts only when someone remembers they exist.", w:{a3:3}},
+    {tag:"Expenses", emoji:"🧳", text:"My expense report from that March trip is still 'in progress'.", w:{a4:3}},
+    {tag:"Unapplied cash", emoji:"🌊", text:"There's a pile of unapplied cash and nobody makes eye contact with it.", w:{a5:3}},
+    {tag:"Collections", emoji:"📞", text:"Our collections strategy is the aging report, top to bottom.", w:{a6:3}},
+    {tag:"Close", emoji:"🏁", text:"Close week is a fire drill we schedule twelve times a year.", w:{a1:2, a5:1}},
+    {tag:"Duplicates", emoji:"👯", text:"We've paid the same invoice twice and called it a learning experience.", w:{a2:2, a3:1}}
+  ],
+  hcm: [
+    {tag:"Benefits", emoji:"🩹", text:"Open enrollment triples my ticket queue and my caffeine intake.", w:{a1:3}},
+    {tag:"Goals", emoji:"🎯", text:"Half our goals are 'improve efficiency' with no noun attached.", w:{a2:3}},
+    {tag:"Offers", emoji:"💰", text:"Managers invent salary numbers and comp finds out later.", w:{a3:3}},
+    {tag:"Screening", emoji:"🧲", text:"Good candidates ghost us because screening takes three weeks.", w:{a4:3}},
+    {tag:"Payslips", emoji:"💵", text:"Payday brings a wave of 'why is my check different?' Every month.", w:{a5:3}},
+    {tag:"Calibration", emoji:"🧭", text:"Talent reviews run on vibes and whoever talks loudest.", w:{a6:3}},
+    {tag:"Attrition", emoji:"🚪", text:"People quit because they can't see a next role here.", w:{a2:2, a4:1}},
+    {tag:"Timecards", emoji:"⏰", text:"Payroll corrections exist because timecards are creative writing.", w:{a5:2, a3:1}}
+  ],
+  epm: [
+    {tag:"Variance hunt", emoji:"🔬", text:"I spend more time finding variances than explaining them.", w:{a1:3}},
+    {tag:"Sandbagging", emoji:"📈", text:"Some forecasts around here are… aspirational. Every quarter.", w:{a2:3, a1:1}},
+    {tag:"Cash", emoji:"🌧️", text:"Our cash forecast is a spreadsheet named FINAL_v7_REALLYFINAL.", w:{a3:3}},
+    {tag:"Recons", emoji:"🧷", text:"Month-end reconciliation is manual ticking, tying, and quiet despair.", w:{a4:3}},
+    {tag:"Consolidation", emoji:"🧱", text:"When consolidation runs slow, we restart it and pray.", w:{a5:3}},
+    {tag:"Commentary", emoji:"📝", text:"Writing board-book commentary is the worst week of my month.", w:{a6:3}},
+    {tag:"Close length", emoji:"🏁", text:"Our close has more days than some months.", w:{a5:2, a4:1}},
+    {tag:"Charts", emoji:"📊", text:"Every executive review needs charts I build by hand at 11 pm.", w:{a1:2, a6:1}}
+  ]
+};
+const CALC_LINES = [
+  "Cross-referencing your red flags…",
+  "Checking who else swiped right on month-end…",
+  "Consulting the compatibility matrix…",
+  "Asking the agents if they're free…"
+];
+
+/* ============ APP ============ */
+let mod = null, qi = 0, scores = {}, maxScores = {}, busy = false;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0});
+}
+
+function initModules(){
+  const g = document.getElementById('mod-grid');
+  g.innerHTML = '';
+  MODULES.forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'mod-card';
+    b.style.setProperty('--mc', m.hue);
+    b.innerHTML = `<span class="mod-emoji">${m.emoji}</span><span class="mod-name">${m.name}</span><span class="mod-sub">${m.sub}</span>`;
+    b.onclick = () => startDeck(m);
+    g.appendChild(b);
+  });
+}
+
+function startDeck(m){
+  if (!QUESTIONS[m.id]) { alert('This deck is being assembled — the demo build only has Procurement so far.'); return; }
+  mod = m; qi = 0; scores = {}; maxScores = {}; busy = false;
+  (AGENTS[m.id]||[]).forEach(a => { scores[a.id] = 0; maxScores[a.id] = 0; });
+  QUESTIONS[m.id].forEach(q => { for (const k in q.w) maxScores[k] = (maxScores[k]||0) + q.w[k]; });
+  document.getElementById('deck-module').textContent = m.name;
+  document.documentElement.style.setProperty('--grad-solid', m.hue);
+  showScreen('scr-deck');
+  renderDeck();
+}
+
+function renderProgress(){
+  const qs = QUESTIONS[mod.id];
+  const p = document.getElementById('prog');
+  p.innerHTML = qs.map((_,i) =>
+    `<i class="${i < qi ? 'done' : i === qi ? 'now' : ''}"></i>`).join('');
+  const foot = document.getElementById('deck-foot');
+  if (qi === Math.ceil(qs.length/2)) foot.innerHTML = '<span class="cheer">Halfway — you’re decisive. The agents are impressed.</span>';
+  else foot.textContent = 'Swipe right if it’s you · left if it isn’t';
+}
+
+function renderDeck(){
+  const deck = document.getElementById('deck');
+  deck.innerHTML = '';
+  const qs = QUESTIONS[mod.id];
+  renderProgress();
+  for (let i = Math.min(qi+2, qs.length-1); i >= qi; i--){
+    const q = qs[i];
+    const c = document.createElement('div');
+    c.className = 'card';
+    const depth = i - qi;
+    c.style.transform = `translateY(${depth*12}px) scale(${1 - depth*0.045})`;
+    c.style.zIndex = 10 - depth;
+    if (depth === 0) c.style.willChange = 'transform';
+    c.innerHTML = `<div class="tint yes"></div><div class="tint no"></div>
+      <span class="verdict yes">That's me</span><span class="verdict no">Not me</span>
+      <span class="q-tag">${mod.name} · ${q.tag}</span>
+      <span class="q-emoji">${q.emoji}</span>
+      <div class="q-text">${q.text}</div>
+      <div class="q-hint"><span>✕ not me</span><span>that's me ❤</span></div>`;
+    if (depth === 0) attachDrag(c);
+    deck.appendChild(c);
+  }
+}
+
+function attachDrag(card){
+  let sx=0, dx=0, dragging=false, lastX=0, lastT=0, vx=0;
+  card.style.touchAction = 'pan-y';
+  const yes = () => card.querySelector('.verdict.yes'), no = () => card.querySelector('.verdict.no');
+  const tintY = () => card.querySelector('.tint.yes'), tintN = () => card.querySelector('.tint.no');
+  card.addEventListener('pointerdown', e => {
+    dragging = true; sx = e.clientX; lastX = e.clientX; lastT = performance.now();
+    card.setPointerCapture(e.pointerId);
+    card.style.transition = 'none';
+  });
+  card.addEventListener('pointermove', e => {
+    if(!dragging) return;
+    dx = e.clientX - sx;
+    const now = performance.now();
+    if (now - lastT > 16){ vx = (e.clientX - lastX)/(now - lastT); lastX = e.clientX; lastT = now; }
+    card.style.transform = `translateX(${dx}px) rotate(${dx*0.06}deg)`;
+    const o = Math.min(Math.abs(dx)/100, 1);
+    yes().style.opacity = dx > 0 ? o : 0;
+    tintY().style.opacity = dx > 0 ? o : 0;
+    no().style.opacity = dx < 0 ? o : 0;
+    tintN().style.opacity = dx < 0 ? o : 0;
+  });
+  const end = () => {
+    if(!dragging) return; dragging = false;
+    const threshold = Math.min(window.innerWidth*0.3, 140);
+    if (Math.abs(dx) > threshold || Math.abs(vx) > 0.5) commitSwipe(card, dx > 0 || (Math.abs(dx) <= threshold && vx > 0) ? 1 : -1);
+    else {
+      card.style.transition = 'transform .45s cubic-bezier(.175,.885,.32,1.275)';
+      card.style.transform = '';
+      [yes(), no(), tintY(), tintN()].forEach(el => el.style.opacity = 0);
+    }
+    dx = 0; vx = 0;
+  };
+  card.addEventListener('pointerup', end);
+  card.addEventListener('pointercancel', end);
+}
+
+function swipe(dir){
+  if (!document.getElementById('scr-deck').classList.contains('active')) return;
+  const deck = document.getElementById('deck');
+  const top = deck.lastElementChild;
+  if (top) commitSwipe(top, dir);
+}
+
+function commitSwipe(card, dir){
+  if (busy || !mod || qi >= QUESTIONS[mod.id].length) return;
+  busy = true;
+  const q = QUESTIONS[mod.id][qi];
+  if (dir === 1) for (const k in q.w) scores[k] += q.w[k];
+  navigator.vibrate?.(12);
+  if (reduceMotion){
+    card.style.transition = 'opacity .2s';
+    card.style.opacity = '0';
+  } else {
+    card.style.transition = 'transform .4s ease-out, opacity .4s';
+    card.style.transform = `translateX(${dir*(window.innerWidth+200)}px) rotate(${dir*28}deg)`;
+    card.style.opacity = '0';
+  }
+  qi++;
+  setTimeout(() => {
+    busy = false;
+    if (qi >= QUESTIONS[mod.id].length) calculate();
+    else renderDeck();
+  }, reduceMotion ? 180 : 320);
+}
+
+function calculate(){
+  document.getElementById('calc-line').textContent = CALC_LINES[Math.floor(Math.random()*CALC_LINES.length)];
+  showScreen('scr-calc');
+  setTimeout(reveal, reduceMotion ? 400 : 1600);
+}
+
+function reveal(){
+  const agents = AGENTS[mod.id];
+  const ranked = agents.map(a => {
+    const max = maxScores[a.id] || 1;
+    const raw = scores[a.id] / max;
+    const pct = Math.round(55 + raw * 44);
+    return {a, raw, pct};
+  }).sort((x,y) => y.raw - x.raw);
+  const top = ranked[0];
+
+  // kinetic title
+  const t = document.getElementById('match-title');
+  t.innerHTML = [..."It's a match."].map((ch,i) =>
+    `<span style="--d:${i*0.045}s">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+
+  document.getElementById('m-badge').textContent = top.a.badge || '🤖';
+  document.getElementById('m-name').textContent = top.a.name;
+  document.getElementById('m-bio').textContent = top.a.bio;
+  document.getElementById('m-does').textContent = top.a.does;
+  document.getElementById('m-where').textContent = top.a.where;
+  const r = document.getElementById('m-runners');
+  const rest = ranked.slice(1,3);
+  r.innerHTML = rest.length ? `<h3>Also caught feelings for you</h3>` + rest.map(x =>
+    `<div class="runner"><span class="r-name">${x.a.badge || ''} ${x.a.name}</span><span class="r-pct">${x.pct}%</span></div>`).join('') : '';
+  document.getElementById('m-roi').href = `ai-roi-calculator.html?agent=${encodeURIComponent(top.a.id)}&mod=${mod.id}`;
+  window._match = top;
+
+  // flash + confetti + reveal
+  if (!reduceMotion){
+    const f = document.getElementById('flash');
+    f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+    confetti();
+  }
+  showScreen('scr-match');
+  countUp(document.getElementById('m-pct'), top.pct, reduceMotion ? 0 : 900);
+}
+
+function countUp(el, target, dur){
+  if (!dur){ el.textContent = target; return; }
+  const t0 = performance.now();
+  const step = now => {
+    const p = Math.min((now - t0)/dur, 1);
+    el.textContent = Math.round(target * (1 - Math.pow(1-p, 3)));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function confetti(){
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti-wrap';
+  for (let i=0; i<60; i++){
+    const c = document.createElement('div');
+    c.className = 'cf';
+    c.style.setProperty('--x', Math.random()*100 + 'vw');
+    c.style.setProperty('--h', Math.floor(Math.random()*360));
+    c.style.setProperty('--delay', (Math.random()*0.5) + 's');
+    c.style.setProperty('--dur', (1.6 + Math.random()*1.4) + 's');
+    c.style.setProperty('--spin', (Math.random()>0.5?'':'-') + (360 + Math.random()*540) + 'deg');
+    wrap.appendChild(c);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 4000);
+}
+
+function shareMatch(){
+  const m = window._match;
+  if (!m) return;
+  const url = 'https://www.gowthamkumarshivakumar.com/ai-matchmaker.html';
+  const text = `I just matched with ${m.a.name} (${m.pct}% match) ${m.a.badge || ''} — which Oracle AI agent is your type? Swipe for yourself:`;
+  if (navigator.share) navigator.share({title:'The AI Agent Matchmaker', text, url}).catch(()=>{});
+  else {
+    navigator.clipboard?.writeText(`${text} ${url}`);
+    const btn = document.getElementById('m-share');
+    const old = btn.textContent;
+    btn.textContent = 'Copied — paste it on LinkedIn!';
+    setTimeout(() => btn.textContent = old, 2500);
+  }
+}
+
+function restart(){ showScreen('scr-modules'); }
+
+initModules();
+</script>
+</body></html>
